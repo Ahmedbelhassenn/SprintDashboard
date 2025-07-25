@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <!-- Year selection dropdown -->
+        <mat-form-field appearance="fill">
+          <mat-label>Select Year</mat-label>
+          <mat-select [(value)]="selectedYear" (selectionChange)="onYearSelectionChange()">
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- State selection dropdown -->
+        <mat-form-field appearance="fill">
+          <mat-label>Select State</mat-label>
+          <mat-select [(value)]="selectedState" (selectionChange)="onStateSelectionChange()">
+            <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th>Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sprint of filteredSprints">
+                <td>{{ sprint.name }}</td>
+                <td>{{ sprint.startDate }}</td>
+                <td>{{ sprint.endDate }}</td>
+                <td>{{ sprint.state }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noSprints>
+          <p class="text-center">No sprints found.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+.row{
+  margin-top: 8px;
+}
+.table-responsive {
+    max-height: 1000px; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
+  
+  .table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #a8caea;
+    color: black;
+  }
+  .card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  th,td{
+    padding-left: 20px;
+  }

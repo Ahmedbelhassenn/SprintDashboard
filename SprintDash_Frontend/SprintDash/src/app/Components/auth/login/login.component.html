@@ -1,0 +1,41 @@
+ <div class="body">
+  <header class="navbar">
+    <div class="logo"> <a routerLink="/home"> <img src="logo-2.png" alt="Logo SprintDash" width="70px" style="margin: 0"></a></div>
+    <nav>
+      <a href="#">Help</a>
+      <a href="#">Services</a>
+      <a href="#">Contact us</a>
+    </nav>
+  </header>
+  <div class="form-container">
+    <h2>Sign In</h2>
+    <p>Enter your email and password to sign in!</p>
+  
+    <form (ngSubmit)="onLogin()">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email *</mat-label>
+        <input matInput type="email" [(ngModel)]="credentials.email" name="email" placeholder="mail@example.com" #email="ngModel" required email/>
+        <mat-error *ngIf="email.invalid && email.touched"> Valid email is required</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password *</mat-label>
+        <input matInput type="password" [(ngModel)]="credentials.password" name="password" placeholder="Min. 8 characters" minlength="8" #password="ngModel" required />
+        <mat-error *ngIf="password.invalid && password.touched">
+          Password must be at least 8 characters long.
+        </mat-error>
+      </mat-form-field>
+  
+      <div class="form-options">
+        <mat-checkbox>Keep me logged in</mat-checkbox>
+        <a href="#" class="forgot-password">Forgot password?</a>
+      </div>
+  
+      <button mat-raised-button color="primary" class="submit-button">Sign In</button>
+    </form>
+
+    <p class="redirect">Not registered yet? <a routerLink="/signup">      Create an Account</a></p>
+
+  </div>
+  
+</div>

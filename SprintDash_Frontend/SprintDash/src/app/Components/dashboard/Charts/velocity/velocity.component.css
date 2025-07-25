@@ -1,0 +1,25 @@
+
+  #yearFilter {
+    margin-right: 280px;
+    padding: 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+    height: 42px;
+  }
+  
+  #yearFilter:hover {
+    border-color: #007bff;
+  }
+  #yearFilter:focus {
+    border-color: #0056b3;
+  }
+  .filter-container{
+    display: flex;
+  }
+  .filter-container select {
+    cursor: pointer;
+  }
+  

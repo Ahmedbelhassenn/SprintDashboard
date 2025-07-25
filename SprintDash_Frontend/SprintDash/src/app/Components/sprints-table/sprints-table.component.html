@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="logo">
+            <a routerLink="/home"><img src="logo-4.png" alt="Logo DashSprint"></a>
+            <p>DashSprint</p>
+      </div>
+      <hr class="divider">
+      <ul class="menu">
+        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+        <li><a routerLink="/project" routerLinkActive="active">Project</a></li>
+        <li><a routerLink="/sprints-table" routerLinkActive="active">Sprints Table </a></li>
+        <li><a routerLink="/kpis-evolution" routerLinkActive="active">KPIs Evolution</a></li>
+        <li><a routerLink="/user-profile" routerLinkActive="active">User Profile</a></li>
+        <li><a routerLink="/notifications" routerLinkActive="active">Notifications</a></li>
+        <li><a routerLink="/home" routerLinkActive="active" id="logout">Logout</a></li>        
+
+      </ul>
+    </aside>
+    <main class="content">
+      <div class="header">
+        <h3>Sprints List</h3>
+        <div class="header-right">
+          <div class="search-bar">
+            <input type="text" placeholder="Search..." />
+            <button>🔍</button>
+          </div>
+          <div class="notification">
+            <button class="notification-btn">
+              🔔
+              <span class="badge">4</span>
+            </button>
+            <div class="dropdown">
+              <ul>
+                <li>Mike John responded to your email</li>
+                <li>You have 5 new tasks</li>
+                <li>Another Notification</li>
+                <li>Another One</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="profile">
+            <a routerLink="/user-profile"><img src="profile.png" alt="Profile" width="50px" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="sprint_table">
+        <div class="sprint-table-container">
+          <table mat-table [dataSource]="sprintData" class="mat-elevation-z8">
+        
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let sprint"> {{sprint.name}} </td>
+            </ng-container>
+        
+            <!-- Start Date Column -->
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef> Start Date </th>
+              <td mat-cell *matCellDef="let sprint"> {{ sprint.startDate ? (sprint.startDate | date: 'dd/MM/yyyy') : 'Non spécifiée' }} </td>
+            </ng-container>
+        
+            <!-- End Date Column -->
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef> End Date </th>
+              <td mat-cell *matCellDef="let sprint"> {{ sprint.endDate ? (sprint.endDate | date: 'dd/MM/yyyy') : 'Non spécifiée' }} </td>
+            </ng-container>
+        
+            <!-- State Column -->
+            <ng-container matColumnDef="state">
+              <th mat-header-cell *matHeaderCellDef> State </th>
+              <td mat-cell *matCellDef="let sprint"> {{sprint.state}} </td>
+            </ng-container>
+            <!-- Header Row -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Data Rows -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </main>
+</div>
+  

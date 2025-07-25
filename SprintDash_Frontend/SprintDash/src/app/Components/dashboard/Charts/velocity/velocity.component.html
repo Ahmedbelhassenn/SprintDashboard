@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="filter-container">
+      <select id="yearFilter" [(ngModel)]="selectedYear" (change)="filterData()">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+      <h5>Velocity</h5>
+    </div>
+  
+    <canvas id="myChart" width="800px" height="350px"></canvas>
+  </div>
+  

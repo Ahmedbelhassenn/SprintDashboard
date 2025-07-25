@@ -1,0 +1,117 @@
+<div class="body">
+  <header class="navbar">
+    <div class="logo">
+      <a routerLink="/home">
+        <img src="logo-2.png" alt="Logo SprintDash" width="70px" style="margin: 0">
+      </a>
+    </div>
+    <nav>
+      <a href="#">Help</a>
+      <a href="#">Services</a>
+      <a href="#">Contact us</a>
+    </nav>
+  </header>
+
+  <div class="form-container">
+    <h2>Sign Up</h2>
+    <p>Join us and start your journey today!</p>
+  
+    <form #signupForm="ngForm" (ngSubmit)="onSignup(signupForm)" novalidate>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Your Name"
+          [(ngModel)]="member.name"
+          name="name"
+          #name="ngModel"
+          required
+        />
+        <mat-error *ngIf="name.invalid && name.touched">Name is required.</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          placeholder="mail@example.com"
+          [(ngModel)]="member.email"
+          name="email"
+          #email="ngModel"
+          required
+          email
+        />
+        <mat-error *ngIf="email.invalid && email.touched">Valid email is required.</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          placeholder="Min. 8 characters"
+          [(ngModel)]="member.password"
+          name="password"
+          #password="ngModel"
+          required
+          minlength="8"
+        />
+        <mat-error *ngIf="password.invalid && password.touched">
+          Password must be at least 8 characters long.
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Phone Number</mat-label>
+        <input
+          matInput
+          type="tel"
+          placeholder="+1 123 456 7890"
+          [(ngModel)]="member.phoneNumber"
+          name="phoneNumber"
+          #phoneNumber="ngModel"
+          required
+        />
+        <mat-error *ngIf="phoneNumber.invalid && phoneNumber.touched">
+          Phone number is required.
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Birthdate</mat-label>
+        <input
+          matInput
+          type="date"
+          [(ngModel)]="member.birthDate"
+          name="birthDate"
+          #birthDate="ngModel"
+          required
+        />
+        <mat-error *ngIf="birthDate.invalid && birthDate.touched">
+          Birthdate is required.
+        </mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Gender</mat-label>
+        <mat-select
+          [(ngModel)]="member.gender"
+          name="gender"
+          #gender="ngModel"
+          required
+        >
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+          <mat-option value="other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="gender.invalid && gender.touched">Gender is required.</mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" class="submit-button">Sign Up</button>
+    </form>
+    <p class="redirect">Already have an account? <a routerLink="/login">Let’s Sign in</a></p>
+  </div>
+  
+</div>

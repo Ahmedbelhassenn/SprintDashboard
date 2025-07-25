@@ -1,0 +1,14 @@
+# Ignorer les fichiers de configuration sensibles
+**/application.yml
+**/.env
+
+# Node modules (Angular)
+frontend/node_modules/
+
+# Dossier cible (Spring Boot)
+backend/target/
+
+# Fichiers IDE
+*.iml
+.idea/
+.vscode/

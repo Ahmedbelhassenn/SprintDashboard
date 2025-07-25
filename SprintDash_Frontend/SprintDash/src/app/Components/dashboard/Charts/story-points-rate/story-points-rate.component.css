@@ -1,0 +1,19 @@
+.gauge-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  canvas {
+    max-width: 400px;
+    max-height: 120px;
+  }
+  
+  .gauge-label {
+    margin-top: -20px; /* Ajustez pour rapprocher le texte du graphique */
+    font-size: 1.5rem; /* Ajustez la taille du texte */
+    font-weight: bold;
+    color: #180690; /* Violet ou autre couleur harmonieuse */
+  }

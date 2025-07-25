@@ -1,0 +1,41 @@
+<mat-tab-group>
+  <!-- Onglet Chart -->
+  <mat-tab label="Velocity Evolution Per Semester Chart">
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-md-12">
+        <div class="card">
+          <div>
+            <canvas #velocityChartPerSemester></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- Onglet Table -->
+  <mat-tab label="Velocity Evolution Per Semester Table">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <table mat-table [dataSource]="velocities" class="mat-elevation-z8">
+            <!-- Colonne Semester -->
+            <ng-container matColumnDef="semester">
+              <th mat-header-cell *matHeaderCellDef> Semester </th>
+              <td mat-cell *matCellDef="let element">{{ element.semester }}</td>
+            </ng-container>
+
+            <!-- Colonne Velocity -->
+            <ng-container matColumnDef="velocity">
+              <th mat-header-cell *matHeaderCellDef> Velocity </th>
+              <td mat-cell *matCellDef="let element">{{ element.velocity }}</td>
+            </ng-container>
+
+            <!-- Header et Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
