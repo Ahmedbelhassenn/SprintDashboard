@@ -29,7 +29,9 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🧪 Running unit tests...'
-                bat './mvnw.cmd test -Dspring.profiles.active=test'
+                dir('SprintDash_Backend') {
+                    bat 'mvn test'
+                }
             }
         }
     }
