@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+      JIRA_BASE_URL = 'https://belhassenahmed543-1750321487947.atlassian.net'
+    }
     stages {
         stage('Checkout code') {
             steps {
