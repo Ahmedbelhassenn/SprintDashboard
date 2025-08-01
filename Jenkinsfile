@@ -25,6 +25,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Test') {
+            steps {
+                echo '🧪 Running unit tests...'
+                bat './mvnw.cmd test -Dspring.profiles.active=test'
+            }
+        }
     }
 
     post {
