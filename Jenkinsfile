@@ -2,6 +2,8 @@ pipeline {
     agent any
     environment {
       JIRA_BASE_URL = 'https://belhassenahmed543-1750321487947.atlassian.net'
+      FEIGN_CLIENT_USERNAME = 'belhassen.ahmed543@gmail.com'
+      FEIGN_CLIENT_API_TOKEN = 'ATATT3xFfGF0lhVXDFD-VM_m_Kts5mHgU5c26sy6YHZ-entkzVLphWNi6sRkU4s4wWOZ1rsdlF2fVmmLUr7ur-slDitDh8q6a0Cdx5SDowIe_9DLq7cU1uOVMmkNDG1Azx48veCUXhAzVdKHkAF_DCwz6S2lNFdrw0E7kJ6jE_45lPQ7ISysw74=9CC3867B'
     }
     stages {
         stage('Checkout code') {
