@@ -38,6 +38,25 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Build') {
+            steps {
+                echo '🐳 Building Docker image...'
+                dir('SprintDash_Backend') {
+                    bat "docker build -t %IMAGE_NAME% ."
+                }
+            }
+        }
+
+        stage('Docker Compose Up') {
+            steps {
+                echo '🚀 Running Docker Compose...'
+                dir('SprintDash_Backend') {
+                    bat 'docker-compose down'
+                    bat 'docker-compose up -d'
+                }
+            }
+        }
     }
 
     post {
