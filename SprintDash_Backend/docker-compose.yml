@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: sprintdash-db
+    restart: always
+    environment:
+      POSTGRES_DB: sprintdash
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    networks:
+      - sprintdash-network
+
+  backend:
+    image: sprintdash-backend
+    container_name: sprintdash-backend
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sprintdash
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: pass
+    ports:
+      - "9090:8081"
+    networks:
+      - sprintdash-network
+
+networks:
+  sprintdash-network:
