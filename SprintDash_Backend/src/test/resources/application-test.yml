@@ -11,3 +11,5 @@ spring:
   h2:
     console:
       enabled: true
+scheduling:
+  enabled: false
