@@ -14,16 +14,16 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  totalSprints: number = 0;
-  openedSprints: number = 0;
-  totalTickets : number = 0;
-  completedTickets : number = 0;
-  completedStoryPoints: number = 0;
-  totalStoryPoints: number = 0;
-  totalBugs: number = 0;
-  resolvedBugs: number = 0;
-  isLoading: Boolean= true;
-  someCondition: boolean = true; 
+  totalSprints = 0;
+  openedSprints = 0;
+  totalTickets  = 0;
+  completedTickets  = 0;
+  completedStoryPoints = 0;
+  totalStoryPoints = 0;
+  totalBugs = 0;
+  resolvedBugs = 0;
+  isLoading= true;
+  someCondition = true; 
 
   constructor(private kpiService: KpiService) {
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Sprint } from './sprint';
 import { KpiService } from '../../../services/kpi.service';
-import { MatFormField, MatFormFieldModule } from "@angular/material/form-field";
+import {  MatFormFieldModule } from "@angular/material/form-field";
 import { MatOption, MatSelect } from '@angular/material/select';
 import { NgFor } from '@angular/common';
 
@@ -17,8 +17,8 @@ export class SprintListComponent implements OnInit {
   filteredSprints: Sprint[] = [];
   years: string[] = [];
   states: string[] = ['All', 'Active', 'Closed'];
-  selectedYear: string = 'All';
-  selectedState: string = 'All';
+  selectedYear = 'All';
+  selectedState = 'All';
 
   constructor(private kpiService: KpiService) {}
 

@@ -12,10 +12,10 @@ import { Observable } from 'rxjs';
 })
 export class UserProfileComponent implements OnInit {
     private apiUrl="http://localhost:8080/member/kpi/2";
-    completedStoryPoints: number = 0;
-    tasksToDo: number=0;
-    tasksCompleted: number=0;
-    isLoading: boolean= true;
+    completedStoryPoints = 0;
+    tasksToDo=0;
+    tasksCompleted=0;
+    isLoading= true;
 
     constructor(private http: HttpClient){}
     getScrumMemberKpi(): Observable<any>{
