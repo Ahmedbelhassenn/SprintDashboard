@@ -34,7 +34,7 @@ export class VelocityPerSemesterChartComponent
 
   constructor(
     private kpiService: KpiService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   ngOnInit(): void {

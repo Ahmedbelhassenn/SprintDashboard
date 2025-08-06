@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { KpiService } from '../../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -12,9 +12,9 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
   imports : [],
   styleUrl: './sprint-rate.component.css'
 })
-export class SprintRateComponent {
+export class SprintRateComponent implements OnInit {
   chart1: Chart | undefined;
-  failureRate: number = 0;
+  failureRate = 0;
 
   constructor(private kpiService: KpiService) {
     Chart.register(...registerables,ChartDataLabels);

@@ -5,7 +5,7 @@ import { Year } from './year';
 import { KpiService } from '../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {  MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 
 
@@ -27,7 +27,7 @@ export class VelocityPerYearChartComponent implements OnInit, AfterViewInit {
   
   constructor(
     private kpiService: KpiService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     Chart.register(...registerables, ChartDataLabels);
     

@@ -17,7 +17,7 @@ export class VelocityComponent implements OnInit {
   sprintData: any[] = [];
   filteredVelocities: any[] = []; // Données filtrées
   years: string[] = []; // Liste des années disponibles
-  selectedYear: string = 'All'; // Année sélectionnée par défaut
+  selectedYear = 'All'; // Année sélectionnée par défaut
   chart3: Chart | undefined;
 
   constructor(private kpiService: KpiService) {

@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { SprintListComponent } from "./sprint-list/sprint-list.component";
 
 @Component({
   selector: 'app-sprints-table',

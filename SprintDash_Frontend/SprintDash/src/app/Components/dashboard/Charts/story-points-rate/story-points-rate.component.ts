@@ -14,9 +14,9 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 })
 export class StoryPointsRateComponent implements OnInit {
   chart4: Chart | undefined;
-  rate : string ='';
-  completedStoryPoints: number = 0;
-  totalStoryPoints: number = 0;
+  rate  ='';
+  completedStoryPoints = 0;
+  totalStoryPoints = 0;
   constructor(private kpiService: KpiService) {
     Chart.register(...registerables,ChartDataLabels);
   }
