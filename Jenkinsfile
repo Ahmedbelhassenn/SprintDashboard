@@ -1,10 +1,10 @@
 pipeline {
     agent any
     environment {
-      JIRA_BASE_URL = 'https://belhassenahmed543-1750321487947.atlassian.net'
-      FEIGN_CLIENT_USERNAME = 'belhassen.ahmed543@gmail.com'
-      FEIGN_CLIENT_API_TOKEN = 'ATATT3xFfGF0lhVXDFD-VM_m_Kts5mHgU5c26sy6YHZ-entkzVLphWNi6sRkU4s4wWOZ1rsdlF2fVmmLUr7ur-slDitDh8q6a0Cdx5SDowIe_9DLq7cU1uOVMmkNDG1Azx48veCUXhAzVdKHkAF_DCwz6S2lNFdrw0E7kJ6jE_45lPQ7ISysw74=9CC3867B'
-      IMAGE_NAME = 'sprintdash-backend'
+      JIRA_BASE_URL = credentials('JIRA_BASE_URL')
+      FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
+      FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
+      IMAGE_NAME = credentials('IMAGE_NAME')
     }
     stages {
         stage('Checkout code') {
