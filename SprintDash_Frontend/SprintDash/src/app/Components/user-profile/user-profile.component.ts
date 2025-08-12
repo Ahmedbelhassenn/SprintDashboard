@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { MemberStats } from '../../models/kpi.models.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,15 +12,15 @@ import { Observable } from 'rxjs';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent implements OnInit {
-    private apiUrl="http://localhost:8080/member/kpi/2";
-    completedStoryPoints: number = 0;
-    tasksToDo: number=0;
-    tasksCompleted: number=0;
-    isLoading: boolean= true;
+    private apiUrl="http://localhost:8081/member/kpi/2";
+    completedStoryPoints = 0;
+    tasksToDo=0;
+    tasksCompleted=0;
+    isLoading= true;
 
-    constructor(private http: HttpClient){}
-    getScrumMemberKpi(): Observable<any>{
-      return this.http.get<any>(`${this.apiUrl}`);
+    private http = inject(HttpClient);
+    getScrumMemberKpi(): Observable<MemberStats>{
+      return this.http.get<MemberStats>(`${this.apiUrl}`);
     }
     ngOnInit(): void {
         this.fetchMemberKpi();

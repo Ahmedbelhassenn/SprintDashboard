@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Sprint } from './sprint';
+import { Component, inject, OnInit } from '@angular/core';
 import { KpiService } from '../../../services/kpi.service';
-import { MatFormField, MatFormFieldModule } from "@angular/material/form-field";
+import {  MatFormFieldModule } from "@angular/material/form-field";
 import { MatOption, MatSelect } from '@angular/material/select';
 import { NgFor } from '@angular/common';
+import { Sprint } from '../../../models/kpi.models.service';
 
 @Component({
   selector: 'app-sprint-list',
@@ -17,10 +17,10 @@ export class SprintListComponent implements OnInit {
   filteredSprints: Sprint[] = [];
   years: string[] = [];
   states: string[] = ['All', 'Active', 'Closed'];
-  selectedYear: string = 'All';
-  selectedState: string = 'All';
+  selectedYear = 'All';
+  selectedState = 'All';
 
-  constructor(private kpiService: KpiService) {}
+  private kpiService = inject(KpiService);  
 
   ngOnInit(): void {
     this.kpiService.getSprints().subscribe((data: Sprint[]) => {
@@ -28,7 +28,7 @@ export class SprintListComponent implements OnInit {
 
       // Extract and sort years in descending order
       this.years = Array.from(new Set(this.sprints.map(s =>
-        new Date(s.startDate).getFullYear().toString()
+        new Date(s.startDate ?? '').getFullYear().toString()
       ))).sort((a, b) => parseInt(b) - parseInt(a));
       this.years.unshift('All'); // Add "All" option for showing all sprints
 
@@ -41,8 +41,8 @@ export class SprintListComponent implements OnInit {
 
   filterSprints(): void {
     this.filteredSprints = this.sprints
-      .filter(sprint => (this.selectedYear === 'All' || new Date(sprint.startDate).getFullYear().toString() === this.selectedYear))
-      .filter(sprint => (this.selectedState === 'All' || sprint.state.toLowerCase() === this.selectedState.toLowerCase()));
+      .filter(sprint => (this.selectedYear === 'All' || new Date(sprint.startDate ?? '').getFullYear().toString() === this.selectedYear))
+      .filter(sprint => (this.selectedState === 'All' || sprint.state?.toLowerCase() === this.selectedState.toLowerCase()));
   }
 
   onYearSelectionChange(): void {

@@ -1,52 +1,64 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Kpi, Sprint } from '../models/kpi.models.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KpiService {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://localhost:8081';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  getSprints(): Observable<Sprint[]> {
+    return this.http.get<Sprint[]>(`${this.baseUrl}/sprint/all`);
+  }
 
-  getSprints(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/sprint/all`);
+  getTotalSprints(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/totalSprints/all`);
   }
-  getTotalSprints(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/totalSprints/all`);
+
+  getTotalStoryPoints(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/totalStoryPoints/all`);
   }
-  getTotalStoryPoints(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/totalStoryPoints/all`);
+
+  /*getTickets(): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(`${this.baseUrl}/ticket/all`);
+  }*/
+
+  getTotalTickets(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/totalTickets/all`);
   }
-  getTickets(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/ticket/all`);
+
+  /*getProjects(): Observable<Project[]> {
+    return this.http.get<Project[]>(`${this.baseUrl}/project/all`);
+  }*/
+
+ /* getMembers(): Observable<Member[]> {
+    return this.http.get<Member[]>(`${this.baseUrl}/member/all`);
   }
-  getTotalTickets(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/totalTickets/all`);
+*/
+  getFailureRate(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/sprint/failureRate/all`);
   }
-  getProjects(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/project/all`);
+
+  getTotalBugs(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/total/bugs/all`);
   }
-  getMembers(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/member/all`);
+
+  getVelocityPerYear(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/velocity/year/all`);
   }
-  getFailureRate(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/sprint/failureRate/all`);
+
+  getVelocityPerTrimester(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/velocity/trimester/all`);
   }
-  getTotalBugs(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/total/bugs/all`);
+
+  getVelocityPerSemester(): Observable<Kpi[]> {
+    return this.http.get<Kpi[]>(`${this.baseUrl}/velocity/semester/all`);
   }
-  getVelocityPerYear(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/velocity/year/all`);
-  }
-  getVelocityPerTrimester(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/velocity/trimester/all`);
-  }
-  getVelocityPerSemester(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/velocity/semester/all`);
-  }
-  getTicketsBySprintId(sprintId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/ticket/sprint/${sprintId}`);
-  }
+/*
+  getTicketsBySprintId(sprintId: string): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(`${this.baseUrl}/ticket/sprint/${sprintId}`);
+  }*/
 }

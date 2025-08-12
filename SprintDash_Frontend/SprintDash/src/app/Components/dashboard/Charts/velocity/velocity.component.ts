@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KpiService } from '../../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Sprint } from '../../../../models/kpi.models.service';
 
 
 @Component({
@@ -13,16 +14,18 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./velocity.component.css']
 })
 export class VelocityComponent implements OnInit {
-  velocities: any[] = [];
-  sprintData: any[] = [];
-  filteredVelocities: any[] = []; // Données filtrées
+  velocities: Sprint[] = [] ;
+  sprintData: Sprint[] = [];
+  filteredVelocities: Sprint[] = []; // Données filtrées
   years: string[] = []; // Liste des années disponibles
-  selectedYear: string = 'All'; // Année sélectionnée par défaut
+  selectedYear = 'All'; // Année sélectionnée par défaut
   chart3: Chart | undefined;
 
-  constructor(private kpiService: KpiService) {
+  constructor()  {
     Chart.register(...registerables);
   }
+  private kpiService = inject(KpiService);
+
 
   ngOnInit(): void {
     this.loadVelocities();
@@ -35,7 +38,7 @@ export class VelocityComponent implements OnInit {
 
       // Extraire les années disponibles à partir des données
       this.years = Array.from(
-        new Set(this.velocities.map(v => new Date(v.startDate).getFullYear().toString()))
+        new Set(this.velocities.map(v => new Date(v.startDate ?? '').getFullYear().toString()))
       ).sort();
 
       this.years.unshift('All'); // Ajouter "All" en tête de liste
@@ -48,7 +51,7 @@ export class VelocityComponent implements OnInit {
       this.filteredVelocities = [...this.velocities];
     } else {
       this.filteredVelocities = this.velocities.filter(v => {
-        const year = new Date(v.startDate).getFullYear().toString();
+        const year = new Date(v.startDate ?? '').getFullYear().toString();
         return year === this.selectedYear;
       });
     }
@@ -92,9 +95,9 @@ export class VelocityComponent implements OnInit {
     const sprintNames = this.filteredVelocities
       .map(v => v.name.replace(/^Tableau\s/, ''))
       .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-      this.sprintData=sprintNames.map(name =>
-        this.velocities.find(v => v.name.replace(/^Tableau\s/, '') === name)
-      );
+      this.sprintData = sprintNames
+  .map(name => this.velocities.find(v => v.name.replace(/^Tableau\s/, '') === name))
+  .filter((v): v is Sprint => v !== undefined);
     const completedStoryPoints = this.sprintData.map(v => v.completedStoryPoints || 0);
     const totalStoryPoints = this.sprintData.map(v => v.estimatedStoryPoints || 0);
 

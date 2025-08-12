@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KpiService } from '../../services/kpi.service';
 import { VelocityComponent } from './Charts/velocity/velocity.component';
 import { SprintRateComponent } from './Charts/sprint-rate/sprint-rate.component';
@@ -14,19 +14,19 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  totalSprints: number = 0;
-  openedSprints: number = 0;
-  totalTickets : number = 0;
-  completedTickets : number = 0;
-  completedStoryPoints: number = 0;
-  totalStoryPoints: number = 0;
-  totalBugs: number = 0;
-  resolvedBugs: number = 0;
-  isLoading: Boolean= true;
-  someCondition: boolean = true; 
+  totalSprints = 0;
+  openedSprints = 0;
+  totalTickets  = 0;
+  completedTickets  = 0;
+  completedStoryPoints = 0;
+  totalStoryPoints = 0;
+  totalBugs = 0;
+  resolvedBugs = 0;
+  isLoading= true;
+  someCondition = true; 
 
-  constructor(private kpiService: KpiService) {
-  }
+
+  private kpiService = inject(KpiService);
   ngOnInit(): void {
     this.fetchTotalSprints(); 
     this.fetchTotalTickets();
@@ -40,8 +40,10 @@ export class DashboardComponent implements OnInit {
       (response) => {
         if (response.length > 0) {
           const firstItem = response[0];
-          this.totalSprints = firstItem.totalSprints;
-          this.openedSprints = firstItem.totalSprints-firstItem.totalSprintsCompleted;
+          const totalSprints = firstItem.totalSprints || 0;
+          const totalSprintsCompleted = firstItem.totalSprintsCompleted  || 0
+          this.totalSprints = firstItem.totalSprints || 0;
+          this.openedSprints = totalSprints - totalSprintsCompleted;
         }
         this.isLoading = false;
       },
@@ -52,8 +54,8 @@ export class DashboardComponent implements OnInit {
       (response) => {
         if (response.length > 0) {
           const firstItem = response[0];
-          this.totalTickets = firstItem.totalTickets;
-          this.completedTickets = firstItem.totalTicketsCompleted;
+          this.totalTickets = firstItem.totalTickets || 0;
+          this.completedTickets = firstItem.totalTicketsCompleted  || 0;
         }
         this.isLoading = false;
       }
@@ -64,8 +66,8 @@ export class DashboardComponent implements OnInit {
       (response) => {
         if (response.length > 0) {
           const firstItem = response[0];
-          this.totalStoryPoints = firstItem.totalStoryPoints;
-          this.completedStoryPoints = firstItem.totalStoryPointsCompleted;
+          this.totalStoryPoints = firstItem.totalStoryPoints || 0;
+          this.completedStoryPoints = firstItem.totalStoryPointsCompleted || 0;
         }
         this.isLoading = false;
       }
@@ -76,8 +78,8 @@ export class DashboardComponent implements OnInit {
       (response) => {
         if (response.length > 0) {
           const firstItem = response[0];
-          this.totalBugs = firstItem.totalBugs;
-          this.resolvedBugs = firstItem.bugsResolved;
+          this.totalBugs = firstItem.totalBugs || 0;
+          this.resolvedBugs = firstItem.bugsResolved || 0;
         }
         this.isLoading = false;
       }

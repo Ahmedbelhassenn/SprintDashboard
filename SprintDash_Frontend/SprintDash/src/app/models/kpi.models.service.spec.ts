@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AuthService } from './auth.service';
+import { KpiModelsService } from './kpi.models.service';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('KpiModelsService', () => {
+  let service: KpiModelsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthService);
+    service = TestBed.inject(KpiModelsService);
   });
 
   it('should be created', () => {
