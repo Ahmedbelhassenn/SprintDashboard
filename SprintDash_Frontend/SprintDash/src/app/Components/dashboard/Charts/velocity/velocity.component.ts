@@ -7,11 +7,10 @@ import { Sprint } from '../../../../models/kpi.models.service';
 
 
 @Component({
-  selector: 'app-velocity',
-  templateUrl: './velocity.component.html',
-  standalone: true ,
-  imports : [NgFor, FormsModule],
-  styleUrls: ['./velocity.component.css']
+    selector: 'app-velocity',
+    templateUrl: './velocity.component.html',
+    imports: [NgFor, FormsModule],
+    styleUrls: ['./velocity.component.css']
 })
 export class VelocityComponent implements OnInit {
   velocities: Sprint[] = [] ;

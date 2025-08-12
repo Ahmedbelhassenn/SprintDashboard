@@ -6,11 +6,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 
 @Component({
-  selector: 'app-story-points-rate',
-  templateUrl: './story-points-rate.component.html',
-  standalone: true ,
-  imports : [],
-  styleUrl: './story-points-rate.component.css'
+    selector: 'app-story-points-rate',
+    templateUrl: './story-points-rate.component.html',
+    imports: [],
+    styleUrl: './story-points-rate.component.css'
 })
 export class StoryPointsRateComponent implements OnInit {
   chart4: Chart | undefined;

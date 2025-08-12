@@ -6,11 +6,10 @@ import { NgFor } from '@angular/common';
 import { Sprint } from '../../../models/kpi.models.service';
 
 @Component({
-  selector: 'app-sprint-list',
-  templateUrl: './sprint-list.component.html',
-  styleUrls: ['./sprint-list.component.css'],
-  imports: [MatFormFieldModule, MatSelect, MatOption, NgFor],
-  standalone: true
+    selector: 'app-sprint-list',
+    templateUrl: './sprint-list.component.html',
+    styleUrls: ['./sprint-list.component.css'],
+    imports: [MatFormFieldModule, MatSelect, MatOption, NgFor]
 })
 export class SprintListComponent implements OnInit {
   sprints: Sprint[] = [];

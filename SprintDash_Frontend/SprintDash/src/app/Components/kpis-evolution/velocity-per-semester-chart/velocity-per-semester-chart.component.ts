@@ -16,11 +16,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { Kpi } from '../../../models/kpi.models.service';
 
 @Component({
-  selector: 'app-velocity-per-semester-chart',
-  templateUrl: './velocity-per-semester-chart.component.html',
-  styleUrls: ['./velocity-per-semester-chart.component.css'],
-  standalone: true,
-  imports: [CommonModule, MatTableModule, MatTabsModule]
+    selector: 'app-velocity-per-semester-chart',
+    templateUrl: './velocity-per-semester-chart.component.html',
+    styleUrls: ['./velocity-per-semester-chart.component.css'],
+    imports: [CommonModule, MatTableModule, MatTabsModule]
 })
 export class VelocityPerSemesterChartComponent
   implements OnInit, AfterViewInit

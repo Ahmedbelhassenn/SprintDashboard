@@ -12,11 +12,10 @@ import { Kpi } from '../../../models/kpi.models.service';
 
 
 @Component({
-  selector: 'app-velocity-per-year-chart',
-  templateUrl: './velocity-per-year-chart.component.html',
-  standalone: true ,
-  imports : [MatTableModule, MatTabsModule],
-  styleUrls: ['./velocity-per-year-chart.component.css']
+    selector: 'app-velocity-per-year-chart',
+    templateUrl: './velocity-per-year-chart.component.html',
+    imports: [MatTableModule, MatTabsModule],
+    styleUrls: ['./velocity-per-year-chart.component.css']
 })
 export class VelocityPerYearChartComponent implements OnInit, AfterViewInit {
   

@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { MemberStats } from '../../models/kpi.models.service';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  standalone: true ,
-  imports : [RouterLink],
-  styleUrl: './user-profile.component.css'
+    selector: 'app-user-profile',
+    templateUrl: './user-profile.component.html',
+    imports: [RouterLink],
+    styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent implements OnInit {
     private apiUrl="http://localhost:8081/member/kpi/2";

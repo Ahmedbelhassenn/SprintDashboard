@@ -13,22 +13,21 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { Member } from '../../../models/kpi.models.service';
 
 @Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  standalone: true,
-  imports: [
-    FormsModule,
-    RouterLink,
-    NgIf,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatButtonModule,
-    MatDatepickerModule,
-    MatNativeDateModule
-  ],
-  styleUrls: ['./signup.component.css']
+    selector: 'app-signup',
+    templateUrl: './signup.component.html',
+    imports: [
+        FormsModule,
+        RouterLink,
+        NgIf,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatButtonModule,
+        MatDatepickerModule,
+        MatNativeDateModule
+    ],
+    styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
   member: Member = {
