@@ -1,22 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { FormsModule, NgForm } from '@angular/forms';
+import { NgIf } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatOption } from '@angular/material/core';
-import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { Member } from '../../../models/kpi.models.service';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule, MatOption, NgIf, RouterLink, MatInputModule, MatButtonModule],
+  imports: [
+    FormsModule,
+    RouterLink,
+    NgIf,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-  member = {
+  member: Member = {
+    id : 1,
     name: '',
     email: '',
     password: '',
@@ -25,12 +41,10 @@ export class SignupComponent {
     birthDate: ''
   };
 
-  constructor(private authService: AuthService, private router:Router) {}
- 
-  onSignup(signupForm: any) {
-    // Vérifiez si le formulaire est invalide
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  onSignup(signupForm: NgForm ) {
     if (signupForm.invalid) {
-      // Marquez tous les champs comme touchés pour forcer l'affichage des erreurs
       Object.keys(signupForm.controls).forEach((field) => {
         const control = signupForm.controls[field];
         control.markAsTouched({ onlySelf: true });
@@ -38,8 +52,7 @@ export class SignupComponent {
       alert('Veuillez remplir tous les champs requis correctement avant de continuer.');
       return;
     }
-  
-    // Si le formulaire est valide, continuez avec l'inscription
+
     this.authService.signup(this.member).subscribe({
       next: (response) => {
         console.log('Inscription réussie:', response);
@@ -52,12 +65,10 @@ export class SignupComponent {
         } else if (error.status === 400 && error.error.error === 'Bad Request') {
           alert('Essayer un autre mot de passe plus fort.');
         } else {
-          alert('Erreur d\'inscription: ' + error.message); // Message général en cas d'erreur inattendue
+          alert('Erreur d\'inscription: ' + error.message);
         }
       }
-    }
-      
-    );
+    });
   }
-  
 }
+

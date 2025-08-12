@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KpiService } from '../../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -16,9 +16,10 @@ export class SprintRateComponent implements OnInit {
   chart1: Chart | undefined;
   failureRate = 0;
 
-  constructor(private kpiService: KpiService) {
+  constructor() {
     Chart.register(...registerables,ChartDataLabels);
   }
+  private kpiService = inject(KpiService);
 
   ngOnInit() {
     this.fetchFailureRate();
@@ -26,7 +27,8 @@ export class SprintRateComponent implements OnInit {
 
   fetchFailureRate() {
     this.kpiService.getFailureRate().subscribe(data => {
-      this.failureRate = data[0]?.failureRate * 100; // Convertit en pourcentage
+      const failureRate = data[0]?.failureRate || 0;
+      this.failureRate =  failureRate* 100; // Convertit en pourcentage
       this.createSprintChart();
     });
   }

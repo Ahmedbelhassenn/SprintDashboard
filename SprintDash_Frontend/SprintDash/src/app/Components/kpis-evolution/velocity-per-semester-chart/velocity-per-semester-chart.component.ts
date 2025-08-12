@@ -4,16 +4,16 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
-  Inject,
-  PLATFORM_ID
+  PLATFORM_ID,
+  inject
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { KpiService } from '../../../services/kpi.service';
-import { Semester } from './semester';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Kpi } from '../../../models/kpi.models.service';
 
 @Component({
   selector: 'app-velocity-per-semester-chart',
@@ -25,17 +25,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 export class VelocityPerSemesterChartComponent
   implements OnInit, AfterViewInit
 {
-  velocities: Semester[] = [];
+  velocities: Kpi[] = [];
   chart2?: Chart;
   displayedColumns: string[] = ['semester', 'velocity'];
 
   @ViewChild('velocityChartPerSemester', { static: false })
   velocityChartPerSemester!: ElementRef;
 
-  constructor(
-    private kpiService: KpiService,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) {}
+  
+  private kpiService = inject(KpiService);
+  private platformId = inject(PLATFORM_ID);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -43,7 +42,7 @@ export class VelocityPerSemesterChartComponent
     }
 
     // Données statiques pour test
-    const staticData: Semester[] = [
+    const staticData: Kpi[] = [
       { semester: '2023-H1', velocity: 120 },
       { semester: '2023-H2', velocity: 130 },
       { semester: '2024-H1', velocity: 110 },
@@ -51,7 +50,7 @@ export class VelocityPerSemesterChartComponent
     ];
 
     // Récupération des données dynamiques
-    this.kpiService.getVelocityPerSemester().subscribe((data: Semester[]) => {
+    this.kpiService.getVelocityPerSemester().subscribe((data: Kpi[]) => {
       const dynamicData = data?.sort(this.sortSemesters) || [];
       this.velocities = [...staticData, ...dynamicData].sort(this.sortSemesters);
       this.createChart(); // Créer le chart après avoir reçu les données
@@ -64,9 +63,9 @@ export class VelocityPerSemesterChartComponent
     }
   }
 
-  sortSemesters(a: Semester, b: Semester): number {
-    const [yearA, halfA] = a.semester.split('-');
-    const [yearB, halfB] = b.semester.split('-');
+  sortSemesters(a: Kpi, b: Kpi): number {
+    const [yearA, halfA] = (a.semester ?? '').split('-');
+    const [yearB, halfB] = (b.semester ?? '').split('-');
 
     if (yearA === yearB) {
       return halfA.localeCompare(halfB);
@@ -78,7 +77,7 @@ export class VelocityPerSemesterChartComponent
     if (!isPlatformBrowser(this.platformId)) return;
 
     const semesters = this.velocities.map((v) => v.semester);
-    const velocityValues = this.velocities.map((v) => v.velocity);
+    const velocityValues = this.velocities.map((v) => v.velocity).filter((v): v is number => v !== undefined && v !== null);
 
     if (this.chart2) {
       this.chart2.destroy();

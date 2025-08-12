@@ -1,4 +1,4 @@
-import { Component, OnInit , Inject} from '@angular/core';
+import { Component, OnInit , inject} from '@angular/core';
 import { KpiService } from '../../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -17,9 +17,11 @@ export class StoryPointsRateComponent implements OnInit {
   rate  ='';
   completedStoryPoints = 0;
   totalStoryPoints = 0;
-  constructor(private kpiService: KpiService) {
+  constructor () {
     Chart.register(...registerables,ChartDataLabels);
   }
+  
+  private kpiService = inject(KpiService);
 
   ngOnInit() {
     this.fetchTotalStoryPoints();
@@ -30,8 +32,8 @@ export class StoryPointsRateComponent implements OnInit {
       (response) => {
         if (response.length > 0) {
           const firstItem = response[0];
-          this.totalStoryPoints = firstItem.totalStoryPoints;
-          this.completedStoryPoints = firstItem.totalStoryPointsCompleted;
+          this.totalStoryPoints = firstItem.totalStoryPoints || 0;
+          this.completedStoryPoints = firstItem.totalStoryPointsCompleted || 0;
           this.rate=((this.completedStoryPoints/(this.totalStoryPoints))*100).toFixed(2);
         }
         this.createStoryChart();

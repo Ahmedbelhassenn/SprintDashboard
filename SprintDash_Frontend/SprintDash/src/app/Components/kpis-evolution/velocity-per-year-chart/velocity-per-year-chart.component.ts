@@ -1,12 +1,12 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, PLATFORM_ID, inject } from '@angular/core';
 
 import { isPlatformBrowser } from '@angular/common';
-import { Year } from './year';
 import { KpiService } from '../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {  MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Kpi } from '../../../models/kpi.models.service';
 
 
 
@@ -20,29 +20,27 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class VelocityPerYearChartComponent implements OnInit, AfterViewInit {
   
-  velocities: Year[] = [];
+  velocities: Kpi[] = [];
   displayedColumns: string[] = ['year', 'velocity']; // Table column headers
   @ViewChild('velocityChartPerYear', { static: false }) velocityChartPerYear!: ElementRef;
   private chart5: Chart | undefined;
   
-  constructor(
-    private kpiService: KpiService,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) {
+  constructor() {
     Chart.register(...registerables, ChartDataLabels);
     
   }
-
+  private platformId = inject(PLATFORM_ID);
+  private kpiService = inject(KpiService);
   ngOnInit(): void {
     // Static data for testing
-    const staticData: Year[] = [
+    const staticData: Kpi[] = [
       { year: '2020', velocity: 120 },
       { year: '2021', velocity: 140 },
       { year: '2022', velocity: 110 },
       { year: '2023', velocity: 130 },
     ];
 
-    this.kpiService.getVelocityPerYear().subscribe((data: Year[]) => {
+    this.kpiService.getVelocityPerYear().subscribe((data: Kpi[]) => {
       // Merge static and dynamic data, then sort
       const dynamicData = data || []; // Handle potential undefined values
       this.velocities = [...staticData, ...dynamicData].sort(this.sortYears);
@@ -60,15 +58,17 @@ export class VelocityPerYearChartComponent implements OnInit, AfterViewInit {
   }
 
   // Sort years numerically
-  sortYears(a: Year, b: Year): number {
-    return parseInt(a.year, 10) - parseInt(b.year, 10);
+  sortYears(a: Kpi, b: Kpi): number {
+    return parseInt(a.year ?? '0', 10) - parseInt(b.year ?? '0', 10);
   }
 
   createChart(): void {
     // Check if data and chart element are available
     if (this.velocityChartPerYear && this.velocities.length > 0) {
       const years = this.velocities.map(v => `Year ${v.year}`);
-      const velocityValues = this.velocities.map(v => v.velocity);
+      const velocityValues = this.velocities
+        .map(v => typeof v.velocity === 'number' ? v.velocity : undefined)
+        .filter((v): v is number => v !== undefined);
 
       const ctx = this.velocityChartPerYear.nativeElement.getContext('2d');
 
