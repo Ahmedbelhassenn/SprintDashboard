@@ -8,11 +8,10 @@ import { Sprint } from '../../models/kpi.models.service';
 
 
 @Component({
-  selector: 'app-sprints-table',
-  templateUrl: './sprints-table.component.html',
-  standalone : true,
-  imports: [FormsModule, MatTableModule, DatePipe, RouterLink, RouterLinkActive],
-  styleUrl: './sprints-table.component.css'
+    selector: 'app-sprints-table',
+    templateUrl: './sprints-table.component.html',
+    imports: [FormsModule, MatTableModule, DatePipe, RouterLink, RouterLinkActive],
+    styleUrl: './sprints-table.component.css'
 })
 export class SprintsTableComponent implements OnInit {
   sprints: Sprint[] = [];

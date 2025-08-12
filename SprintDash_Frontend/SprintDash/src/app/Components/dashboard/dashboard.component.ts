@@ -7,11 +7,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  standalone : true, 
-  imports: [VelocityComponent, SprintRateComponent, StoryPointsRateComponent, RouterLink, RouterLinkActive],
-  styleUrls: ['./dashboard.component.css']
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    imports: [VelocityComponent, SprintRateComponent, StoryPointsRateComponent, RouterLink, RouterLinkActive],
+    styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   totalSprints = 0;

@@ -6,11 +6,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 
 @Component({
-  selector: 'app-sprint-rate',
-  templateUrl: './sprint-rate.component.html',
-  standalone: true ,
-  imports : [],
-  styleUrl: './sprint-rate.component.css'
+    selector: 'app-sprint-rate',
+    templateUrl: './sprint-rate.component.html',
+    imports: [],
+    styleUrl: './sprint-rate.component.css'
 })
 export class SprintRateComponent implements OnInit {
   chart1: Chart | undefined;

@@ -9,11 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { NgIf } from '@angular/common';
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  standalone: true,
-imports: [MatFormField, MatLabel, MatError, FormsModule, MatCheckboxModule, NgIf, MatInputModule, MatButtonModule, RouterLink],
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    imports: [MatFormField, MatLabel, MatError, FormsModule, MatCheckboxModule, NgIf, MatInputModule, MatButtonModule, RouterLink],
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   credentials = { email: '', password: '' };
