@@ -16,7 +16,7 @@ pipeline {
         stage('Frontend Lint') {
             steps {
                 echo '🔍 Linting Angular frontend...'
-                dir('SprintDash_Frontend') {
+                dir('SprintDash_Frontend/SprintDash') {
                     bat 'npm install'
                     bat 'npm run lint'
                 }
@@ -26,7 +26,7 @@ pipeline {
         stage('Frontend Build') {
             steps {
                 echo '⚙️ Building Angular frontend...'
-                dir('SprintDash_Frontend') {
+                dir('SprintDash_Frontend/SprintDash') {
                     bat 'ng build --configuration=production'
                 }
             }
