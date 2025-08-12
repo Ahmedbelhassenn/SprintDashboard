@@ -13,6 +13,24 @@ pipeline {
             }
         }
 
+        stage('Frontend Lint') {
+            steps {
+                echo '🔍 Linting Angular frontend...'
+                dir('SprintDash_Frontend') {
+                    bat 'npm run lint'
+                }
+            }
+        }
+        
+        stage('Frontend Build') {
+            steps {
+                echo '⚙️ Building Angular frontend...'
+                dir('SprintDash_Frontend') {
+                    bat 'ng build --configuration=production'
+                }
+            }
+        }
+
         stage('Linting') {
             steps {
                 echo 'Running Checkstyle...'
@@ -27,25 +45,6 @@ pipeline {
                 echo 'Building the application...'
                 dir('SprintDash_Backend') {
                     bat 'mvnw.cmd clean package -DskipTests'
-                }
-            }
-        }
-
-        stage('Frontend Lint') {
-            steps {
-                echo '🔍 Linting Angular frontend...'
-                dir('SprintDash_Frontend') {
-                    bat 'npm install'
-                    bat 'npm run lint'
-                }
-            }
-        }
-        
-        stage('Frontend Build') {
-            steps {
-                echo '⚙️ Building Angular frontend...'
-                dir('SprintDash_Frontend') {
-                    bat 'ng build --configuration=production'
                 }
             }
         }
