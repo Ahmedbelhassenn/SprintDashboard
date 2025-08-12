@@ -31,6 +31,25 @@ pipeline {
             }
         }
 
+        stage('Frontend Lint') {
+            steps {
+                echo '🔍 Linting Angular frontend...'
+                dir('frontend') {
+                    bat 'npm install'
+                    bat 'npm run lint'
+                }
+            }
+        }
+        
+        stage('Frontend Build') {
+            steps {
+                echo '⚙️ Building Angular frontend...'
+                dir('frontend') {
+                    bat 'ng build --configuration=production'
+                }
+            }
+        }
+
         stage('Test') {
             steps {
                 echo '🧪 Running unit tests...'
