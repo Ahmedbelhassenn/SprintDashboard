@@ -17,6 +17,7 @@ pipeline {
             steps {
                 echo '🔍 Linting Angular frontend...'
                 dir('SprintDash_Frontend') {
+                    bat 'npm install'
                     bat 'npm run lint'
                 }
             }
