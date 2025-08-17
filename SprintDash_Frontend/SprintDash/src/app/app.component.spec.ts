@@ -19,8 +19,4 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app.title).toEqual('sprintDash');
   });
-
-  it('should render title', () => {
-    
-  });
 });
