@@ -32,7 +32,15 @@ pipeline {
             }
         }
 
-        stage('Linting') {
+        stage('Frontend Test') {
+            steps {
+                dir('SprintDash_Frontend/SprintDash') {
+                    bat 'npm run test -- --watch=false --browsers=ChromeHeadless'
+                }
+            }
+        }
+
+        stage('Backend Lint') {
             steps {
                 echo 'Running Checkstyle...'
                 dir('SprintDash_Backend') {
@@ -41,7 +49,7 @@ pipeline {
             }
         }
 
-        stage('Build avec Maven') {
+        stage('Backend Build avec Maven') {
             steps {
                 echo 'Building the application...'
                 dir('SprintDash_Backend') {
@@ -50,7 +58,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Backend Test') {
             steps {
                 echo '🧪 Running unit tests...'
                 dir('SprintDash_Backend') {
@@ -59,7 +67,7 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Backend Docker Build') {
             steps {
                 echo '🐳 Building Docker image...'
                 dir('SprintDash_Backend') {
@@ -68,7 +76,7 @@ pipeline {
             }
         }
 
-        stage('Docker Compose Up') {
+        stage('Backend Docker Compose Up') {
             steps {
                 echo '🚀 Running Docker Compose...'
                 dir('SprintDash_Backend') {
