@@ -3,12 +3,13 @@ import { KpiService } from '../../../services/kpi.service';
 import {  MatFormFieldModule } from "@angular/material/form-field";
 import { MatOption, MatSelect } from '@angular/material/select';
 import { NgFor } from '@angular/common';
-import { Sprint } from '../../../models/kpi.models.service';
+import { Sprint } from '../../../models/kpi.models';
 
 @Component({
     selector: 'app-sprint-list',
     templateUrl: './sprint-list.component.html',
     styleUrls: ['./sprint-list.component.css'],
+    standalone: true,
     imports: [MatFormFieldModule, MatSelect, MatOption, NgFor]
 })
 export class SprintListComponent implements OnInit {

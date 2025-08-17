@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { KpisEvolutionComponent } from './kpis-evolution.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('KpisEvolutionComponent', () => {
   let component: KpisEvolutionComponent;
@@ -8,7 +11,7 @@ describe('KpisEvolutionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [KpisEvolutionComponent]
+      imports: [KpisEvolutionComponent, HttpClientModule, RouterTestingModule   ]
     })
     .compileComponents();
 

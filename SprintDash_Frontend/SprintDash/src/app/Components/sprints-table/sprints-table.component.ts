@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Sprint } from '../../models/kpi.models.service';
+import { Sprint } from '../../models/kpi.models';
 
 
 @Component({
     selector: 'app-sprints-table',
     templateUrl: './sprints-table.component.html',
+    standalone: true,
     imports: [FormsModule, MatTableModule, DatePipe, RouterLink, RouterLinkActive],
     styleUrl: './sprints-table.component.css'
 })

@@ -11,6 +11,7 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
+    standalone: true,
     imports: [MatFormField, MatLabel, MatError, FormsModule, MatCheckboxModule, NgIf, MatInputModule, MatButtonModule, RouterLink],
     styleUrls: ['./login.component.css']
 })

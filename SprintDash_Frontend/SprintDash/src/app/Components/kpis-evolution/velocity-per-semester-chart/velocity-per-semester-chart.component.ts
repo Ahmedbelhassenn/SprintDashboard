@@ -13,12 +13,13 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { KpiService } from '../../../services/kpi.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Kpi } from '../../../models/kpi.models.service';
+import { Kpi } from '../../../models/kpi.models';
 
 @Component({
     selector: 'app-velocity-per-semester-chart',
     templateUrl: './velocity-per-semester-chart.component.html',
     styleUrls: ['./velocity-per-semester-chart.component.css'],
+    standalone: true,
     imports: [CommonModule, MatTableModule, MatTabsModule]
 })
 export class VelocityPerSemesterChartComponent

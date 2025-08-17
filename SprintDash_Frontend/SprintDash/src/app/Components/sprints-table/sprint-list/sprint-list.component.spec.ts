@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SprintListComponent } from './sprint-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SprintListComponent', () => {
   let component: SprintListComponent;
@@ -8,7 +9,7 @@ describe('SprintListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SprintListComponent]
+      imports: [SprintListComponent, HttpClientModule]
     })
     .compileComponents();
     

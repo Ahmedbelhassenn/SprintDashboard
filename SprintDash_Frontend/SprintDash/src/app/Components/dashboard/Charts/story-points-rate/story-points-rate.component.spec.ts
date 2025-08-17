@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StoryPointsRateComponent } from './story-points-rate.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('StoryPointsRateComponent', () => {
   let component: StoryPointsRateComponent;
@@ -8,7 +9,7 @@ describe('StoryPointsRateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [StoryPointsRateComponent]
+      imports: [StoryPointsRateComponent, HttpClientModule]
     })
     .compileComponents();
 

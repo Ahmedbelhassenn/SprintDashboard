@@ -6,7 +6,7 @@ import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {  MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Kpi } from '../../../models/kpi.models.service';
+import { Kpi } from '../../../models/kpi.models';
 
 
 
@@ -14,6 +14,7 @@ import { Kpi } from '../../../models/kpi.models.service';
 @Component({
     selector: 'app-velocity-per-year-chart',
     templateUrl: './velocity-per-year-chart.component.html',
+    standalone: true,
     imports: [MatTableModule, MatTabsModule],
     styleUrls: ['./velocity-per-year-chart.component.css']
 })
