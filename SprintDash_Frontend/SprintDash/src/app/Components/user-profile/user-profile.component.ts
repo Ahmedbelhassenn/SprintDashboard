@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { MemberStats } from '../../models/kpi.models.service';
+import { MemberStats } from '../../models/kpi.models';
 
 @Component({
     selector: 'app-user-profile',
     templateUrl: './user-profile.component.html',
+    standalone: true,
     imports: [RouterLink],
     styleUrl: './user-profile.component.css'
 })

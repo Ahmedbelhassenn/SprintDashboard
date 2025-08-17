@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { KpiService } from './kpi.service';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('KpiService', () => {
   let service: KpiService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule]
+    });
     service = TestBed.inject(KpiService);
   });
 

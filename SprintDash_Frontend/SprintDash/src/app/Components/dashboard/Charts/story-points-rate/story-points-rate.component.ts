@@ -8,6 +8,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
     selector: 'app-story-points-rate',
     templateUrl: './story-points-rate.component.html',
+    standalone: true,
     imports: [],
     styleUrl: './story-points-rate.component.css'
 })

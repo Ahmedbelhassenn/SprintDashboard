@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VelocityComponent } from './velocity.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('VelocityComponent', () => {
   let component: VelocityComponent;
@@ -8,7 +9,7 @@ describe('VelocityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VelocityComponent]
+      imports: [VelocityComponent, HttpClientModule]
     })
     .compileComponents();
 

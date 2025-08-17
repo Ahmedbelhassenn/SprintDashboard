@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SprintRateComponent } from './sprint-rate.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SprintRateComponent', () => {
   let component: SprintRateComponent;
@@ -8,7 +9,7 @@ describe('SprintRateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SprintRateComponent]
+      imports: [SprintRateComponent, HttpClientModule]
     })
     .compileComponents();
 

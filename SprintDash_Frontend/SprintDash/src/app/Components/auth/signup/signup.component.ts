@@ -10,11 +10,12 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { Member } from '../../../models/kpi.models.service';
+import { Member } from '../../../models/kpi.models';
 
 @Component({
     selector: 'app-signup',
     templateUrl: './signup.component.html',
+    standalone: true,
     imports: [
         FormsModule,
         RouterLink,

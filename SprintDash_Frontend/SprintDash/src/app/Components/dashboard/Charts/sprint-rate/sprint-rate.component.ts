@@ -8,6 +8,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
     selector: 'app-sprint-rate',
     templateUrl: './sprint-rate.component.html',
+    standalone: true,
     imports: [],
     styleUrl: './sprint-rate.component.css'
 })

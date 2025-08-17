@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VelocityPerSemesterChartComponent } from './velocity-per-semester-chart.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('VelocityPerSemesterChartComponent', () => {
   let component: VelocityPerSemesterChartComponent;
@@ -8,7 +9,7 @@ describe('VelocityPerSemesterChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VelocityPerSemesterChartComponent]
+      imports: [VelocityPerSemesterChartComponent, HttpClientModule]
     })
     .compileComponents();
     

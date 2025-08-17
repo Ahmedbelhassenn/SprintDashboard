@@ -3,12 +3,13 @@ import { KpiService } from '../../../../services/kpi.service';
 import { Chart, registerables } from 'chart.js';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Sprint } from '../../../../models/kpi.models.service';
+import { Sprint } from '../../../../models/kpi.models';
 
 
 @Component({
     selector: 'app-velocity',
     templateUrl: './velocity.component.html',
+    standalone: true, 
     imports: [NgFor, FormsModule],
     styleUrls: ['./velocity.component.css']
 })

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Member } from '../models/kpi.models.service';
+import { Member } from '../models/kpi.models';
 
 @Injectable({
   providedIn: 'root'

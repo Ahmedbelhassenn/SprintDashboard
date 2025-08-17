@@ -6,6 +6,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
     selector: 'app-kpis-evolution',
     templateUrl: './kpis-evolution.component.html',
+    standalone: true,
     imports: [VelocityPerSemesterChartComponent, VelocityPerYearChartComponent, RouterLink, RouterLinkActive],
     styleUrl: './kpis-evolution.component.css'
 })
