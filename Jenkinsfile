@@ -40,6 +40,25 @@ pipeline {
             }
         }
 
+        stage('Frontend Docker Build') {
+            steps {
+                echo '🐳 Building Docker image for Angular frontend...'
+                dir('SprintDash_Frontend/SprintDash') {
+                    bat "docker build -t sprintdash-frontend:latest ."
+                }
+            }
+        }
+
+        stage('Frontend Docker Compose Up') {
+            steps {
+                echo '🚀 Running frontend container...'
+                dir('SprintDash_Frontend/SprintDash') {
+                    bat 'docker-compose down'
+                    bat 'docker-compose up -d'
+                }
+            }
+        }
+
         stage('Backend Lint') {
             steps {
                 echo 'Running Checkstyle...'
