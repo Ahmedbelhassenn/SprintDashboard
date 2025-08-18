@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: sprintdash-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}             
+      POSTGRES_USER: ${POSTGRES_USER}         
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+    ports:
+      - "5433:5432"  
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sprintdash-network
+
+  backend:
+    build: ./SprintDash_Backend               # Dockerfile in backend
+    container_name: sprintdash-backend
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8081:8081"   
+    networks:
+      - sprintdash-network
+
+  frontend:
+    build: ./SprintDash_Frontend/SprintDash  # Dockerfile in frontend
+    container_name: sprintdash-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:z"    # Angular served by nginx
+    networks:
+      - sprintdash-network
+
+networks:
+  sprintdash-network:
+
+volumes:
+  postgres_data:
