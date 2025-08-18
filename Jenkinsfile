@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        # Jenkins credentials (can be used in Docker Compose or app)
         JIRA_BASE_URL = credentials('JIRA_BASE_URL')
         FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
         FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
