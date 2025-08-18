@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   db:
@@ -17,7 +16,7 @@ services:
       - sprintdash-network
 
   backend:
-    build: ./SprintDash_Backend               # Dockerfile in backend
+    build: ./SprintDash_Backend              
     container_name: sprintdash-backend
     depends_on:
       - db
@@ -31,12 +30,12 @@ services:
       - sprintdash-network
 
   frontend:
-    build: ./SprintDash_Frontend/SprintDash  # Dockerfile in frontend
+    build: ./SprintDash_Frontend/SprintDash 
     container_name: sprintdash-frontend
     depends_on:
       - backend
     ports:
-      - "4200:z"    # Angular served by nginx
+      - "4200:80"    
     networks:
       - sprintdash-network
 
