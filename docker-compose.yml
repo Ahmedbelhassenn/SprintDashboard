@@ -36,7 +36,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "4200:80"    # Angular served by nginx
+      - "4200:z"    # Angular served by nginx
     networks:
       - sprintdash-network
 
