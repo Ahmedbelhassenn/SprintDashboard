@@ -1,6 +1,4 @@
-# Ignorer les fichiers de configuration sensibles
-**/application.yml
-**/.env
+
 
 # Node modules (Angular)
 frontend/node_modules/
