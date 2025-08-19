@@ -7,7 +7,7 @@ import { Kpi, Sprint } from '../models/kpi.models';
   providedIn: 'root'
 })
 export class KpiService {
-  private baseUrl = 'http://localhost:8081';
+  private baseUrl = 'http://localhost:8085';
   private http = inject(HttpClient);
 
   getSprints(): Observable<Sprint[]> {
