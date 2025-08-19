@@ -39,7 +39,7 @@ public class TicketServicesImpl implements TicketServices {
     }
 
     public JiraIssuesResponseContainer getIssuesDataFromJira(){
-        return jiraClient.getJiraIssues("1");
+        return jiraClient.getJiraIssues("2");
     }
 
     public void updateTicket(){
