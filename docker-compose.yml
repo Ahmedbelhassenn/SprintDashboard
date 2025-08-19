@@ -16,7 +16,7 @@ services:
       - sprintdash-network
 
   backend:
-    build: ./SprintDash_Backend               # Dockerfile in backend
+    build: ./SprintDash_Backend              
     container_name: sprintdash-backend
     depends_on:
       - db
@@ -24,18 +24,21 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JIRA_BASE_URL : ${JIRA_BASE_URL}
+      FEIGN_CLIENT_USERNAME : ${FEIGN_CLIENT_USERNAME}
+      FEIGN_CLIENT_API_TOKEN : ${FEIGN_CLIENT_API_TOKEN}
     ports:
-      - "8085:8081"   
+      - "8085:8080"   
     networks:
       - sprintdash-network
 
   frontend:
-    build: ./SprintDash_Frontend/SprintDash  # Dockerfile in frontend
+    build: ./SprintDash_Frontend/SprintDash 
     container_name: sprintdash-frontend
     depends_on:
       - backend
     ports:
-      - "4200:80"    # Angular served by nginx
+      - "4200:80"    
     networks:
       - sprintdash-network
 
