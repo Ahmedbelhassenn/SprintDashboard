@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        JIRA.BASE_URL = credentials('JIRA.BASE_URL')
+        JIRA_BASE_URL = credentials('JIRA.BASE_URL')
         FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
         FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
         POSTGRES_DB = credentials('POSTGRES_DB')
