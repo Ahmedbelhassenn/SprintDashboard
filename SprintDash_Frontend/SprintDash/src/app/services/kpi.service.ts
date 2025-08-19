@@ -57,6 +57,13 @@ export class KpiService {
   getVelocityPerSemester(): Observable<Kpi[]> {
     return this.http.get<Kpi[]>(`${this.baseUrl}/velocity/semester/all`);
   }
+
+  refrshJira(): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update/jira`, '');
+  }
+  refreshKPIs(): Observable<any> {
+    return this.http.put(`${this.baseUrl}/update/kpis`,'');
+  }
 /*
   getTicketsBySprintId(sprintId: string): Observable<Ticket[]> {
     return this.http.get<Ticket[]>(`${this.baseUrl}/ticket/sprint/${sprintId}`);
