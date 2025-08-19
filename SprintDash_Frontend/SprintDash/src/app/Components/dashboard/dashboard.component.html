@@ -23,6 +23,7 @@
             <input type="text" placeholder="Search..." />
             <button>🔍</button>
           </div>
+          <button class="refresh-btn" (click)="refreshKPIs()">🔄 Refresh KPIs</button>
           <div class="notification">
             <button class="notification-btn">
               🔔
@@ -111,7 +112,7 @@
         </div>
          <div class="progress">
           <!-- Chart 2 -->
-          <div class="chart-card">
+          <div class="chart-card" >
             <h5>Sprint Goal Progress</h5>
             <app-sprint-rate ngSkipHydration></app-sprint-rate>
   
