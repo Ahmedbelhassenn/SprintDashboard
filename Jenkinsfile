@@ -1,10 +1,12 @@
 pipeline {
     agent any
     environment {
-      JIRA_BASE_URL = credentials('JIRA_BASE_URL')
-      FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
-      FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
-      IMAGE_NAME = credentials('IMAGE_NAME')
+        JIRA_BASE_URL = credentials('JIRA_BASE_URL')
+        FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
+        FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
+        POSTGRES_DB = credentials('POSTGRES_DB')
+        POSTGRES_USER = credentials('POSTGRES_USER')
+        POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
     }
     stages {
         stage('Checkout code') {
@@ -13,6 +15,18 @@ pipeline {
             }
         }
 
+        stage('Docker Compose Up') {
+            steps {
+                echo '🐳 Building and running all services via Docker Compose...'
+                dir('.') {  // root of the repo
+                    // Use environment variables in Docker Compose automatically
+                    bat 'docker-compose down --remove-orphans'
+                    bat 'docker-compose up --build -d'
+                }
+            }
+        }
+
+        // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
                 echo '🔍 Linting Angular frontend...'
@@ -40,37 +54,19 @@ pipeline {
             }
         }
 
-        stage('Frontend Docker Build') {
-            steps {
-                echo '🐳 Building Docker image for Angular frontend...'
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat "docker build -t sprintdash-frontend:latest ."
-                }
-            }
-        }
-
-        stage('Frontend Docker Compose Up') {
-            steps {
-                echo '🚀 Running frontend container...'
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat 'docker-compose down'
-                    bat 'docker-compose up -d'
-                }
-            }
-        }
-
+        // -------- BACKEND --------
         stage('Backend Lint') {
             steps {
-                echo 'Running Checkstyle...'
+                echo '🔍 Running Checkstyle for backend...'
                 dir('SprintDash_Backend') {
                     bat 'mvnw.cmd checkstyle:check'
                 }
             }
         }
 
-        stage('Backend Build avec Maven') {
+        stage('Backend Build') {
             steps {
-                echo 'Building the application...'
+                echo '⚙️ Building Spring Boot backend...'
                 dir('SprintDash_Backend') {
                     bat 'mvnw.cmd clean package -DskipTests'
                 }
@@ -79,31 +75,15 @@ pipeline {
 
         stage('Backend Test') {
             steps {
-                echo '🧪 Running unit tests...'
+                echo '🧪 Running backend unit tests...'
                 dir('SprintDash_Backend') {
                     bat 'mvn test'
                 }
             }
         }
 
-        stage('Backend Docker Build') {
-            steps {
-                echo '🐳 Building Docker image...'
-                dir('SprintDash_Backend') {
-                    bat "docker build -t %IMAGE_NAME% ."
-                }
-            }
-        }
-
-        stage('Backend Docker Compose Up') {
-            steps {
-                echo '🚀 Running Docker Compose...'
-                dir('SprintDash_Backend') {
-                    bat 'docker-compose down'
-                    bat 'docker-compose up -d'
-                }
-            }
-        }
+        // -------- DOCKER COMPOSE --------
+        
     }
 
     post {
