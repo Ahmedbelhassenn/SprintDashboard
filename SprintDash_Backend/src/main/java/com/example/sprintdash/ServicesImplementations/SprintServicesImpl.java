@@ -45,7 +45,7 @@ public class SprintServicesImpl implements SprintServices {
 
 
     public JiraSprintResponseContainer getSprintDataFromJira(){
-        return jiraClient.getJiraSprints("1");
+        return jiraClient.getJiraSprints("2");
     }
 
     public void updateSprintData(){
