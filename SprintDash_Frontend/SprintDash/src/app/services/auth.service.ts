@@ -7,7 +7,7 @@ import { Member } from '../models/kpi.models';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8081/member';
+  private baseUrl = 'http://localhost:8085/member';
 
   private http = inject(HttpClient);
   signup(member: Member): Observable<Member> {

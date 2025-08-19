@@ -12,7 +12,7 @@ import { MemberStats } from '../../models/kpi.models';
     styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent implements OnInit {
-    private apiUrl="http://localhost:8081/member/kpi/2";
+    private apiUrl="http://localhost:8085/member/kpi/2";
     completedStoryPoints = 0;
     tasksToDo=0;
     tasksCompleted=0;
