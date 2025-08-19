@@ -39,7 +39,7 @@ public class VelocityAvgServicesImpl implements VelocityAvgServices {
                 counter++;
             }
         }
-        VelocityAvg v=velocityAvgRepo.findByPeriod("all").get();
+        VelocityAvg v=velocityAvgRepo.findByPeriod("all").orElse(new VelocityAvg());
         v.setVelocityAvg((double) completed /counter);
         velocityAvgRepo.save(v);
     }
