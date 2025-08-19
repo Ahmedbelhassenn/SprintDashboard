@@ -77,7 +77,7 @@ pipeline {
                 echo '🐳 Building and running all services via Docker Compose...'
                 dir('.') {  // root of the repo
                     // Use environment variables in Docker Compose automatically
-                    bat 'docker-compose down'
+                    bat 'docker-compose down --remove-orphans'
                     bat 'docker-compose up --build -d'
                 }
             }
