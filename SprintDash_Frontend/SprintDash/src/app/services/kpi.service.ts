@@ -58,11 +58,11 @@ export class KpiService {
     return this.http.get<Kpi[]>(`${this.baseUrl}/velocity/semester/all`);
   }
 
-  refreshJira(): Observable<String> {
-    return this.http.put<String>(`${this.baseUrl}/update/jira`, '');
+  refreshJira(): Observable<string> {
+    return this.http.put<string>(`${this.baseUrl}/update/jira`, '');
   }
-  refreshKPIs(): Observable<String> {
-    return this.http.put<String>(`${this.baseUrl}/update/kpis`,'');
+  refreshKPIs(): Observable<string> {
+    return this.http.put<string>(`${this.baseUrl}/update/kpis`,'');
   }
 /*
   getTicketsBySprintId(sprintId: string): Observable<Ticket[]> {
