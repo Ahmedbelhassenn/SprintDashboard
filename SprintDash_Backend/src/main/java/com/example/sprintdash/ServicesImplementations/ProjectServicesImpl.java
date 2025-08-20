@@ -32,7 +32,7 @@ public class ProjectServicesImpl implements ProjectServices {
     }
 
     public JiraProjectResponseContainer getProjectDataFromJira(){
-        return jiraClient.getJiraProjects("2");
+        return jiraClient.getJiraProjects("34");
     }
     public void updateProject(){
         JiraProjectResponseContainer projectData = getProjectDataFromJira();
