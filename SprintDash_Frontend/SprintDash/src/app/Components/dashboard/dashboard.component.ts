@@ -87,12 +87,24 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshKPIs() {
-    this.kpiService.refrshJira().subscribe({
+    this.kpiService.refreshJira().subscribe({
       next: (response) => {
         console.log('Jira refreshed successfully:', response);
       },
       error: (error) => { 
         console.error('Failed to refresh Jira:', error);
+      }
+    });
+    this.kpiService.refreshKPIs().subscribe({
+      next: (response) => {
+        console.log('KPIs refreshed successfully:', response);
+        this.fetchTotalSprints();
+        this.fetchTotalTickets();
+        this.fetchTotalStoryPoints();
+        this.fetchBugs();
+      },
+      error: (error) => {
+        console.error('Failed to refresh KPIs:', error);
       }
     });
   }
