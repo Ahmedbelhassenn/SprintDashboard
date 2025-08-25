@@ -7,10 +7,6 @@ pipeline {
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-        SSH_CRED = 'id-credential-ssh' 
-        VM_USER = 'ahmed_bh'           
-        VM_IP = '10.0.2.15'            
-        PROJECT_PATH = '/home/ahmed_bh/SprintDashboard' 
     }
     stages {
         stage('Checkout code') {
@@ -86,18 +82,22 @@ pipeline {
         }
 
         // -------- DEPLOY SUR VM --------
-        stage('Deploy on VM') {
+        stage('Deploy to VM') {
             steps {
-                sshagent([env.SSH_CRED]) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ${VM_USER}@${VM_IP} '
-                        mkdir -p ${PROJECT_PATH} &&
-                        cd ${PROJECT_PATH} &&
-                        git pull || git clone https://github.com/Ahmedbelhassenn/SprintDashboard.git ${PROJECT_PATH} &&
-                        docker-compose down --remove-orphans &&
-                        docker-compose up --build -d
-                    '
-                    """
+                sshagent(['vm-ssh-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
+                            mkdir -p ~/deploy &&
+                            rm -rf ~/deploy/* &&
+                            exit
+                        "
+
+                        scp -P 2222 target/*.jar ahmed_bh@127.0.0.1:~/deploy/app.jar
+
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
+                            nohup java -jar ~/deploy/app.jar > ~/deploy/app.log 2>&1 &
+                        "
+                    '''
                 }
             }
         }
