@@ -7,6 +7,10 @@ pipeline {
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
+        SSH_CRED = 'id-credential-ssh' 
+        VM_USER = 'ton_user'           
+        VM_IP = '10.0.2.15'            
+        PROJECT_PATH = '/home/ton_user/SprintDashboard' 
     }
     stages {
         stage('Checkout code') {
@@ -14,6 +18,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Ahmedbelhassenn/SprintDashboard.git'
             }
         }
+
         // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
@@ -70,14 +75,29 @@ pipeline {
             }
         }
 
-        // -------- DOCKER COMPOSE --------
-        stage('Docker Compose Up') {
+        // -------- DOCKER BUILD LOCAL --------
+        stage('Docker Compose Build Local') {
             steps {
-                echo '🐳 Building and running all services via Docker Compose...'
-                dir('.') {  // root of the repo
-                    // Use environment variables in Docker Compose automatically
-                    bat 'docker-compose down --remove-orphans'
-                    bat 'docker-compose up --build -d'
+                echo '🐳 Build images locally for backend/frontend...'
+                dir('.') {
+                    bat 'docker-compose build'
+                }
+            }
+        }
+
+        // -------- DEPLOY SUR VM --------
+        stage('Deploy on VM') {
+            steps {
+                sshagent([env.SSH_CRED]) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ${VM_USER}@${VM_IP} '
+                        mkdir -p ${PROJECT_PATH} &&
+                        cd ${PROJECT_PATH} &&
+                        git pull || git clone https://github.com/Ahmedbelhassenn/SprintDashboard.git ${PROJECT_PATH} &&
+                        docker-compose down --remove-orphans &&
+                        docker-compose up --build -d
+                    '
+                    """
                 }
             }
         }
