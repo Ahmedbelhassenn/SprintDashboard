@@ -10,7 +10,7 @@ pipeline {
         SSH_CRED = 'id-credential-ssh' 
         VM_USER = 'ton_user'           
         VM_IP = '10.0.2.15'            
-        PROJECT_PATH = '/home/ton_user/SprintDashboard' 
+        PROJECT_PATH = '/home/ahmed_bh/SprintDashboard' 
     }
     stages {
         stage('Checkout code') {
