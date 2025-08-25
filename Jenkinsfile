@@ -8,7 +8,7 @@ pipeline {
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
         SSH_CRED = 'id-credential-ssh' 
-        VM_USER = 'ton_user'           
+        VM_USER = 'ahmed_bh'           
         VM_IP = '10.0.2.15'            
         PROJECT_PATH = '/home/ahmed_bh/SprintDashboard' 
     }
