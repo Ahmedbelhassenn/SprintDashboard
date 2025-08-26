@@ -42,23 +42,32 @@ pipeline {
                 echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN} 1>> temp_env
                 """
         
-                // 3️⃣ Copier docker-compose, .env et les dossiers backend/frontend sur la VM
+                // 3️⃣ Archiver backend et frontend
+                bat """
+                powershell Compress-Archive -Path SprintDash_Backend\\* -DestinationPath SprintDash_Backend.zip
+                powershell Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip
+                """
+        
+                // 4️⃣ Copier les archives et docker-compose/.env sur la VM
                 bat """
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 temp_env ahmed_bh@127.0.0.1:~/deploy/.env
-                powershell Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend.zip ahmed_bh@127.0.0.1:~/deploy/
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend.zip ahmed_bh@127.0.0.1:~/deploy/
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && unzip -o SprintDash_Frontend.zip -d SprintDash_Frontend"
                 """
         
-                // 4️⃣ Lancer le déploiement Docker Compose sur la VM
+                // 5️⃣ Décompresser les archives sur la VM
+                bat """
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && unzip -o SprintDash_Backend.zip && unzip -o SprintDash_Frontend.zip"
+                """
+        
+                // 6️⃣ Lancer le déploiement Docker Compose
                 bat """
                 ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && docker-compose down && docker-compose up -d --build"
                 """
             }
         }
 
-        
         // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
