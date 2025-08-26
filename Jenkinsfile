@@ -85,18 +85,10 @@ pipeline {
         stage('Deploy to VM') {
             steps {
                 sshagent(['vm-ubuntu-ssh']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
-                            mkdir -p ~/deploy &&
-                            rm -rf ~/deploy/* &&
-                            exit
-                        "
-
-                        scp -P 2222 target/*.jar ahmed_bh@127.0.0.1:~/deploy/app.jar
-
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
-                            nohup java -jar ~/deploy/app.jar > ~/deploy/app.log 2>&1 &
-                        "
+                    bat '''
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "mkdir -p ~/deploy && rm -rf ~/deploy/*"
+                        scp -P 2222 SprintDash_Backend/target/*.jar ahmed_bh@127.0.0.1:~/deploy/app.jar
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "nohup java -jar ~/deploy/app.jar > ~/deploy/app.log 2>&1 &"
                     '''
                 }
             }
