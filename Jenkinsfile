@@ -34,18 +34,18 @@ pipeline {
         
                 // 2️⃣ Générer le fichier .env avec les variables Jenkins
                 bat """
-                echo POSTGRES_DB=${POSTGRES_DB} 1> temp_env
-                echo POSTGRES_USER=${POSTGRES_USER} 1>> temp_env
-                echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD} 1>> temp_env
-                echo JIRA_BASE_URL=${JIRA_BASE_URL} 1>> temp_env
-                echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME} 1>> temp_env
-                echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN} 1>> temp_env
+                echo POSTGRES_DB=${POSTGRES_DB}  1> temp_env
+                echo POSTGRES_USER=${POSTGRES_USER}  1>> temp_env
+                echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD}  1>> temp_env
+                echo JIRA_BASE_URL=${JIRA_BASE_URL}  1>> temp_env
+                echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME}  1>> temp_env
+                echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN}  1>> temp_env
                 """
         
-                // 3️⃣ Archiver backend et frontend
+                // 3️⃣ Archiver backend et frontend avec PowerShell
                 bat """
-                powershell Compress-Archive -Path SprintDash_Backend\\* -DestinationPath SprintDash_Backend.zip
-                powershell Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip
+                powershell -Command "Compress-Archive -Path SprintDash_Backend\\* -DestinationPath SprintDash_Backend.zip"
+                powershell -Command "Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip"
                 """
         
                 // 4️⃣ Copier les archives et docker-compose/.env sur la VM
@@ -67,7 +67,6 @@ pipeline {
                 """
             }
         }
-
         // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
