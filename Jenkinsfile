@@ -21,6 +21,26 @@ pipeline {
             }
         }
 
+        
+        stage('Frontend Lint & Build') {
+            steps {
+                dir('SprintDash_Frontend/SprintDash') {
+                    bat 'npm install'
+                    bat 'npm run lint'
+                    bat 'ng build --configuration=production'
+                }
+            }
+        }
+
+        stage('Backend Build & Test') {
+            steps {
+                dir('SprintDash_Backend') {
+                    bat 'mvnw.cmd clean package -DskipTests'
+                    bat 'mvn test'
+                }
+            }
+        }
+
         stage('Docker Build & Save') {
             steps {
                 echo '🐳 Building and saving images'
@@ -57,24 +77,6 @@ pipeline {
                 bat """
                 ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "${DEPLOY_DIR}/deploy.sh"
                 """
-            }
-        }
-        stage('Frontend Lint & Build') {
-            steps {
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat 'npm install'
-                    bat 'npm run lint'
-                    bat 'ng build --configuration=production'
-                }
-            }
-        }
-
-        stage('Backend Build & Test') {
-            steps {
-                dir('SprintDash_Backend') {
-                    bat 'mvnw.cmd clean package -DskipTests'
-                    bat 'mvn test'
-                }
             }
         }
     }
