@@ -24,7 +24,7 @@ export class LoginComponent {
 
   onLogin() {
     console.log(this.credentials); 
-    this.http.post('http://localhost:8085/member/login', this.credentials).subscribe({
+    this.http.post('http://127.0.0.1:8085/member/login', this.credentials).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
         this.router.navigate(['/dashboard']);

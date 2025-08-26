@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/totalTickets")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://127.0.0.1:4200")
 public class TotalTicketsController {
     @Autowired
     TotalTicketsServices totalTicketsServices;
