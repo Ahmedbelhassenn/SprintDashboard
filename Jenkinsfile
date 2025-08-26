@@ -7,10 +7,11 @@ pipeline {
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-        SSH_KEY = 'C:\\Users\\USER\\.ssh\\jenkins_id_rsa'  // chemin clé SSH Jenkins
+        SSH_KEY = 'C:\\Users\\USER\\.ssh\\jenkins_id_rsa'  
         VM_USER = 'ahmed_bh'
         VM_HOST = '127.0.0.1'
         VM_PORT = '2222'
+        DEPLOY_DIR = '~/deploy'
     }
 
     stages {
@@ -48,6 +49,10 @@ pipeline {
                 dir('.') {
                     bat 'docker build -t sprintdash-backend:latest ./SprintDash_Backend'
                     bat 'docker build -t sprintdash-frontend:latest ./SprintDash_Frontend/SprintDash'
+
+                    // Sauvegarder les images pour transfert
+                    bat 'docker save sprintdash-backend:latest -o backend.tar'
+                    bat 'docker save sprintdash-frontend:latest -o frontend.tar'
                 }
             }
         }
@@ -57,21 +62,30 @@ pipeline {
             steps {
                 echo '🚀 Deploying containers on VM using Docker Compose...'
 
-                // Copier docker-compose.yml et .env sur la VM
+                // Copier docker-compose.yml, .env et images Docker sur la VM
                 bat """
-                scp -i ${SSH_KEY} -P ${VM_PORT} docker-compose.yml ${VM_USER}@${VM_HOST}:~/deploy/
+                scp -i ${SSH_KEY} -P ${VM_PORT} docker-compose.yml ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
                 echo POSTGRES_DB=${POSTGRES_DB} > temp_env
                 echo POSTGRES_USER=${POSTGRES_USER} >> temp_env
                 echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD} >> temp_env
                 echo JIRA_BASE_URL=${JIRA_BASE_URL} >> temp_env
                 echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME} >> temp_env
                 echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN} >> temp_env
-                scp -i ${SSH_KEY} -P ${VM_PORT} temp_env ${VM_USER}@${VM_HOST}:~/deploy/.env
+                scp -i ${SSH_KEY} -P ${VM_PORT} temp_env ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/.env
+
+                scp -i ${SSH_KEY} -P ${VM_PORT} backend.tar ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
+                scp -i ${SSH_KEY} -P ${VM_PORT} frontend.tar ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
                 """
 
-                // Lancer Docker Compose sur la VM
+                // Charger les images sur la VM et lancer Docker Compose
                 bat """
-                ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "cd ~/deploy && docker-compose down --remove-orphans && docker-compose up -d"
+                ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "
+                    cd ${DEPLOY_DIR} &&
+                    docker load -i backend.tar &&
+                    docker load -i frontend.tar &&
+                    docker-compose down --remove-orphans &&
+                    docker-compose up -d
+                "
                 """
             }
         }
