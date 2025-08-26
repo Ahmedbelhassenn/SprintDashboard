@@ -27,12 +27,9 @@ pipeline {
 
        stage('Prepare & Deploy to VM') {
             steps {
-                // 1️⃣ Créer le dossier deploy sur la VM
-                bat """
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "mkdir -p ~/deploy"
-                """
-        
-                // 2️⃣ Générer le fichier .env avec les variables Jenkins
+                echo '🚀 Deploying Docker images on VM...'
+                
+                // 1️⃣ Copier docker-compose.yml et fichier .env avec variables Jenkins
                 bat """
                 echo POSTGRES_DB=${POSTGRES_DB}  1> temp_env
                 echo POSTGRES_USER=${POSTGRES_USER}  1>> temp_env
@@ -40,33 +37,17 @@ pipeline {
                 echo JIRA_BASE_URL=${JIRA_BASE_URL}  1>> temp_env
                 echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME}  1>> temp_env
                 echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN}  1>> temp_env
-                """
-        
-                // 3️⃣ Archiver backend et frontend avec PowerShell
-                bat """
-                powershell -Command "Compress-Archive -Path SprintDash_Backend\\* -DestinationPath SprintDash_Backend.zip"
-                powershell -Command "Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip"
-                """
-        
-                // 4️⃣ Copier les archives et docker-compose/.env sur la VM
-                bat """
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 temp_env ahmed_bh@127.0.0.1:~/deploy/.env
-                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend.zip ahmed_bh@127.0.0.1:~/deploy/
-                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend.zip ahmed_bh@127.0.0.1:~/deploy/
                 """
         
-                // 5️⃣ Décompresser les archives sur la VM
+                // 2️⃣ Déployer avec Docker Compose sur la VM
                 bat """
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && unzip -o SprintDash_Backend.zip && unzip -o SprintDash_Frontend.zip"
-                """
-        
-                // 6️⃣ Lancer le déploiement Docker Compose
-                bat """
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && docker-compose down && docker-compose up -d --build"
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && docker-compose pull && docker-compose down && docker-compose up -d"
                 """
             }
         }
+
         // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
