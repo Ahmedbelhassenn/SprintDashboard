@@ -1,3 +1,4 @@
+
 services:
   db:
     image: postgres:16
@@ -15,7 +16,7 @@ services:
       - sprintdash-network
 
   backend:
-    image: sprintdash-backend:latest   # Image déjà buildée et transférée sur la VM
+    build: ./SprintDash_Backend               # Dockerfile in backend
     container_name: sprintdash-backend
     depends_on:
       - db
@@ -29,12 +30,12 @@ services:
       - sprintdash-network
 
   frontend:
-    image: sprintdash-frontend:latest  # Image déjà buildée et transférée sur la VM
+    build: ./SprintDash_Frontend/SprintDash  # Dockerfile in frontend
     container_name: sprintdash-frontend
     depends_on:
       - backend
     ports:
-      - "4200:80"    # Angular servi par nginx
+      - "4200:80"    # Angular served by nginx
     networks:
       - sprintdash-network
 
