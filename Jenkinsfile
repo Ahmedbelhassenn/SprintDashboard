@@ -7,7 +7,7 @@ pipeline {
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-        SSH_KEY = 'C:\\Users\\USER\\.ssh\\jenkins_id_rsa'  
+        SSH_KEY = 'C:\\Users\\USER\\.ssh\\jenkins_id_rsa'
         VM_USER = 'ahmed_bh'
         VM_HOST = '127.0.0.1'
         VM_PORT = '2222'
@@ -21,48 +21,23 @@ pipeline {
             }
         }
 
-        // -------- FRONTEND --------
-        stage('Frontend Lint & Build') {
-            steps {
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat 'npm install'
-                    bat 'npm run lint'
-                    bat 'ng build --configuration=production'
-                }
-            }
-        }
-
-        // -------- BACKEND --------
-        stage('Backend Build & Test') {
-            steps {
-                dir('SprintDash_Backend') {
-                    bat 'mvnw.cmd clean package -DskipTests'
-                    bat 'mvn test'
-                }
-            }
-        }
-
-        // -------- Docker Images --------
         stage('Docker Build Local Images') {
             steps {
                 echo '🐳 Building local images...'
                 dir('.') {
                     bat 'docker build -t sprintdash-backend:latest ./SprintDash_Backend'
                     bat 'docker build -t sprintdash-frontend:latest ./SprintDash_Frontend/SprintDash'
-
-                    // Sauvegarder les images pour transfert
                     bat 'docker save sprintdash-backend:latest -o backend.tar'
                     bat 'docker save sprintdash-frontend:latest -o frontend.tar'
                 }
             }
         }
 
-        // -------- Deploy to VM --------
         stage('Deploy on VM') {
             steps {
-                echo '🚀 Deploying containers on VM using Docker Compose...'
+                echo '🚀 Deploying containers on VM using deploy.sh script...'
 
-                // Copier docker-compose.yml, .env et images Docker sur la VM
+                // Copier docker-compose.yml, .env et les images Docker sur la VM
                 bat """
                 scp -i ${SSH_KEY} -P ${VM_PORT} docker-compose.yml ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
                 echo POSTGRES_DB=${POSTGRES_DB} > temp_env
@@ -77,16 +52,29 @@ pipeline {
                 scp -i ${SSH_KEY} -P ${VM_PORT} frontend.tar ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
                 """
 
-                // Charger les images sur la VM et lancer Docker Compose
+                // Lancer le script deploy.sh sur la VM
                 bat """
-                ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "
-                    cd ${DEPLOY_DIR} &&
-                    docker load -i backend.tar &&
-                    docker load -i frontend.tar &&
-                    docker-compose down --remove-orphans &&
-                    docker-compose up -d
-                "
+                ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "${DEPLOY_DIR}/deploy.sh"
                 """
+            }
+        }
+        
+        stage('Frontend Lint & Build') {
+            steps {
+                dir('SprintDash_Frontend/SprintDash') {
+                    bat 'npm install'
+                    bat 'npm run lint'
+                    bat 'ng build --configuration=production'
+                }
+            }
+        }
+
+        stage('Backend Build & Test') {
+            steps {
+                dir('SprintDash_Backend') {
+                    bat 'mvnw.cmd clean package -DskipTests'
+                    bat 'mvn test'
+                }
             }
         }
     }
