@@ -14,36 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Ahmedbelhassenn/SprintDashboard.git'
             }
         }
-
-        stage('Docker Compose Build Local') {
-            steps {
-                echo '🐳 Build images locally for backend/frontend...'
-                dir('.') {
-                    bat 'docker-compose build'
-                }
-            }
-        }
-
-        // -------- DEPLOY SUR VM --------
-        stage('Deploy to VM') {
-            steps {
-                sshagent(['vm-ubuntu-ssh']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
-                            mkdir -p ~/deploy &&
-                            rm -rf ~/deploy/* &&
-                            exit
-                        "
-
-                        scp -P 2222 target/*.jar ahmed_bh@127.0.0.1:~/deploy/app.jar
-
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
-                            nohup java -jar ~/deploy/app.jar > ~/deploy/app.log 2>&1 &
-                        "
-                    '''
-                }
-            }
-        }
+        
         // -------- FRONTEND --------
         stage('Frontend Lint') {
             steps {
@@ -101,7 +72,35 @@ pipeline {
         }
 
         // -------- DOCKER BUILD LOCAL --------
-        
+        stage('Docker Compose Build Local') {
+            steps {
+                echo '🐳 Build images locally for backend/frontend...'
+                dir('.') {
+                    bat 'docker-compose build'
+                }
+            }
+        }
+
+        // -------- DEPLOY SUR VM --------
+        stage('Deploy to VM') {
+            steps {
+                sshagent(['vm-ubuntu-ssh']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
+                            mkdir -p ~/deploy &&
+                            rm -rf ~/deploy/* &&
+                            exit
+                        "
+
+                        scp -P 2222 target/*.jar ahmed_bh@127.0.0.1:~/deploy/app.jar
+
+                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
+                            nohup java -jar ~/deploy/app.jar > ~/deploy/app.log 2>&1 &
+                        "
+                    '''
+                }
+            }
+        }
     }
 
     post {
