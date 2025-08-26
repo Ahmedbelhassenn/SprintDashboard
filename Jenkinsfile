@@ -25,27 +25,27 @@ pipeline {
             }
         }
 
-       stage('Copy files to VM') {
+       stage('Prepare & Deploy to VM') {
             steps {
+                // 1️⃣ Créer le dossier deploy sur la VM
+                bat """
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "mkdir -p ~/deploy"
+                """
+        
+                // 2️⃣ Copier les fichiers nécessaires
                 bat """
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend/Dockerfile ahmed_bh@127.0.0.1:~/deploy/backend.Dockerfile
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend/SprintDash/Dockerfile ahmed_bh@127.0.0.1:~/deploy/frontend.Dockerfile
                 """
-            }
-        }
-
-        stage('Deploy to VM') {
-            steps {
+        
+                // 3️⃣ Lancer le déploiement Docker Compose
                 bat """
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "
-                    cd ~/deploy &&
-                    docker-compose down &&
-                    docker-compose up -d --build
-                "
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && docker-compose down && docker-compose up -d --build"
                 """
             }
         }
+
         
         // -------- FRONTEND --------
         stage('Frontend Lint') {
