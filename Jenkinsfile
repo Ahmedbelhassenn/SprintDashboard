@@ -28,6 +28,19 @@ pipeline {
         // -------- DEPLOY SUR VM --------
         stage('Test SSH') {
             steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'VM-Deploy',
+                            transfers: [],
+                            execCommand: 'echo "Hello from Jenkins to VM"'
+                        )
+                    ]
+                )
+            }
+        }
+        stage('Tests SSH') {
+            steps {
                 sshagent(['vm-ubuntu-ssh']) {
                     bat 'ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "echo Hello from VM"'
                 }
