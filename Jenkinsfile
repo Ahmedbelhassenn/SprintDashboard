@@ -25,19 +25,25 @@ pipeline {
             }
         }
 
-        // -------- DEPLOY SUR VM --------
-        stage('Deploy to VM') {
+       stage('Copy files to VM') {
             steps {
                 bat """
-                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "echo Hello from VM"
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend/Dockerfile ahmed_bh@127.0.0.1:~/deploy/backend.Dockerfile
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend/SprintDash/Dockerfile ahmed_bh@127.0.0.1:~/deploy/frontend.Dockerfile
                 """
             }
         }
-        stage('Tests SSH') {
+
+        stage('Deploy to VM') {
             steps {
-                sshagent(['vm-ubuntu-ssh']) {
-                    bat 'ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "echo Hello from VM"'
-                }
+                bat """
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "
+                    cd ~/deploy &&
+                    docker-compose down &&
+                    docker-compose up -d --build
+                "
+                """
             }
         }
         
