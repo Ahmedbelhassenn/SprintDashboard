@@ -26,22 +26,10 @@ pipeline {
         }
 
         // -------- DEPLOY SUR VM --------
-        stage('Deploy to VM') {
+        stage('Test SSH') {
             steps {
                 sshagent(['vm-ubuntu-ssh']) {
-                    bat '''
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "rm -rf ~/deploy && mkdir -p ~/deploy"
-                        scp -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
-                        scp -P 2222 -r SprintDash_Backend/Dockerfile ahmed_bh@127.0.0.1:~/deploy/backend.Dockerfile
-                        scp -P 2222 -r SprintDash_Frontend/SprintDash/Dockerfile ahmed_bh@127.0.0.1:~/deploy/frontend.Dockerfile
-        
-                        REM Lancer docker-compose sur la VM
-                        ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
-                            cd ~/deploy &&
-                            docker-compose down &&
-                            docker-compose up -d --build
-                        "
-                    '''
+                    bat 'ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "echo Hello from VM"'
                 }
             }
         }
