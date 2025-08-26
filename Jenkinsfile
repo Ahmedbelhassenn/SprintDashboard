@@ -27,25 +27,35 @@ pipeline {
 
        stage('Prepare & Deploy to VM') {
             steps {
-                // 1️⃣ Créer le dossier deploy sur la VM
+                // Créer le dossier deploy
                 bat """
                 ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "mkdir -p ~/deploy"
                 """
         
-                // 2️⃣ Copier les fichiers nécessaires
+                // Générer le fichier .env avec les variables Jenkins
+                bat """
+                echo POSTGRES_DB=${POSTGRES_DB} > temp_env
+                echo POSTGRES_USER=${POSTGRES_USER} >> temp_env
+                echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD} >> temp_env
+                echo JIRA_BASE_URL=${JIRA_BASE_URL} >> temp_env
+                echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME} >> temp_env
+                echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN} >> temp_env
+                """
+        
+                // Copier docker-compose et .env sur la VM
                 bat """
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 temp_env ahmed_bh@127.0.0.1:~/deploy/.env
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend/Dockerfile ahmed_bh@127.0.0.1:~/deploy/backend.Dockerfile
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend/SprintDash/Dockerfile ahmed_bh@127.0.0.1:~/deploy/frontend.Dockerfile
                 """
         
-                // 3️⃣ Lancer le déploiement Docker Compose
+                // Déploiement Docker Compose
                 bat """
                 ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && docker-compose down && docker-compose up -d --build"
                 """
             }
         }
-
         
         // -------- FRONTEND --------
         stage('Frontend Lint') {
