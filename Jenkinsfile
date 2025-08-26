@@ -26,17 +26,11 @@ pipeline {
         }
 
         // -------- DEPLOY SUR VM --------
-        stage('Test SSH') {
+        stage('Deploy to VM') {
             steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'VM-Deploy',
-                            transfers: [],
-                            execCommand: 'echo "Hello from Jenkins to VM"'
-                        )
-                    ]
-                )
+                bat """
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "echo Hello from VM"
+                """
             }
         }
         stage('Tests SSH') {
