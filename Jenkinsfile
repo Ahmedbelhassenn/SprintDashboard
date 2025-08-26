@@ -84,7 +84,7 @@ pipeline {
         // -------- DEPLOY SUR VM --------
         stage('Deploy to VM') {
             steps {
-                sshagent(['vm-ssh-key']) {
+                sshagent(['vm-ubuntu-ssh']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no -p 2222 ahmed_bh@127.0.0.1 "
                             mkdir -p ~/deploy &&
