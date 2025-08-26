@@ -46,8 +46,9 @@ pipeline {
                 bat """
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 docker-compose.yml ahmed_bh@127.0.0.1:~/deploy/
                 scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 temp_env ahmed_bh@127.0.0.1:~/deploy/.env
-                scp -r -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Backend ahmed_bh@127.0.0.1:~/deploy/
-                scp -r -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend/SprintDash ahmed_bh@127.0.0.1:~/deploy/SprintDash_Frontend
+                powershell Compress-Archive -Path SprintDash_Frontend\\SprintDash\\* -DestinationPath SprintDash_Frontend.zip
+                scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P 2222 SprintDash_Frontend.zip ahmed_bh@127.0.0.1:~/deploy/
+                ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p 2222 ahmed_bh@127.0.0.1 "cd ~/deploy && unzip -o SprintDash_Frontend.zip -d SprintDash_Frontend"
                 """
         
                 // 4️⃣ Lancer le déploiement Docker Compose sur la VM
