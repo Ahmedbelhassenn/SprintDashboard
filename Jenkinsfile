@@ -30,22 +30,7 @@ pipeline {
             }
         }
 
-        stage('Deploy on VM') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sshagent(['vm-ubuntu-ssh']) {
-                        bat """
-                            ssh -p %VM_PORT% %VM_USER%@%VM_HOST% "
-                            cd %DEPLOY_DIR% &&
-                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin &&
-                            docker-compose pull &&
-                            docker-compose up -d
-                            "
-                        """
-                    }
-                }
-            }
-        }
+        
 
         stage('Frontend Lint & Build') {
             steps {
@@ -85,6 +70,23 @@ pipeline {
                         docker push %REGISTRY%/%IMAGE_BACKEND%:%IMAGE_TAG%
                         docker push %REGISTRY%/%IMAGE_FRONTEND%:%IMAGE_TAG%
                     """
+                }
+            }
+        }
+
+        stage('Deploy on VM') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sshagent(['vm-ubuntu-ssh']) {
+                        bat """
+                            ssh -p %VM_PORT% %VM_USER%@%VM_HOST% "
+                            cd %DEPLOY_DIR% &&
+                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin &&
+                            docker-compose pull &&
+                            docker-compose up -d
+                            "
+                        """
+                    }
                 }
             }
         }
