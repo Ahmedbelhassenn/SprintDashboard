@@ -1,27 +1,35 @@
 pipeline {
     agent any
+
     environment {
+        // Docker Hub
+        REGISTRY = "docker.io/ahmedbelhassenn"
+        IMAGE_BACKEND = "sprintdash-backend"
+        IMAGE_FRONTEND = "sprintdash-frontend"
+        IMAGE_TAG = "latest"
+
+        // VM
+        DEPLOY_DIR = "~/deploy"
+        VM_USER = 'ahmed_bh'
+        VM_HOST = '127.0.0.1'
+        VM_PORT = '2222'
+
+        // Jira / Postgres credentials
         JIRA_BASE_URL = credentials('JIRA_BASE_URL')
         FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
         FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
-        SSH_KEY = 'C:\\Users\\USER\\.ssh\\jenkins_id_rsa'
-        VM_USER = 'ahmed_bh'
-        VM_HOST = '127.0.0.1'
-        VM_PORT = '2222'
-        DEPLOY_DIR = '~/deploy'
     }
 
     stages {
-        stage('Checkout code') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Ahmedbelhassenn/SprintDashboard.git'
             }
         }
 
-        
         stage('Frontend Lint & Build') {
             steps {
                 dir('SprintDash_Frontend/SprintDash') {
@@ -41,42 +49,43 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Save') {
+        stage('Docker Build & Push') {
             steps {
-                echo '🐳 Building and saving images'
-                bat """
-                docker build -t sprintdash-backend:latest ./SprintDash_Backend
-                docker build -t sprintdash-frontend:latest ./SprintDash_Frontend/SprintDash
-                docker save sprintdash-backend:latest -o backend.tar
-                docker save sprintdash-frontend:latest -o frontend.tar
-                """
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        REM -- Build backend/frontend --
+                        docker build -t %IMAGE_BACKEND%:latest ./SprintDash_Backend
+                        docker build -t %IMAGE_FRONTEND%:latest ./SprintDash_Frontend/SprintDash
+
+                        REM -- Tag pour Docker Hub --
+                        docker tag %IMAGE_BACKEND%:latest %REGISTRY%/%IMAGE_BACKEND%:%IMAGE_TAG%
+                        docker tag %IMAGE_FRONTEND%:latest %REGISTRY%/%IMAGE_FRONTEND%:%IMAGE_TAG%
+
+                        REM -- Login Docker Hub --
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+
+                        REM -- Push images --
+                        docker push %REGISTRY%/%IMAGE_BACKEND%:%IMAGE_TAG%
+                        docker push %REGISTRY%/%IMAGE_FRONTEND%:%IMAGE_TAG%
+                    """
+                }
             }
         }
 
-        stage('Deploy to VM') {
+        stage('Deploy on VM') {
             steps {
-                echo '🚀 Deploying on VM'
-
-                // Générer .env temporaire et copier fichiers sur la VM
-                bat """
-                echo POSTGRES_DB=${POSTGRES_DB} > temp_env
-                echo POSTGRES_USER=${POSTGRES_USER} >> temp_env
-                echo POSTGRES_PASSWORD=${POSTGRES_PASSWORD} >> temp_env
-                echo JIRA_BASE_URL=${JIRA_BASE_URL} >> temp_env
-                echo FEIGN_CLIENT_USERNAME=${FEIGN_CLIENT_USERNAME} >> temp_env
-                echo FEIGN_CLIENT_API_TOKEN=${FEIGN_CLIENT_API_TOKEN} >> temp_env
-
-                scp -i ${SSH_KEY} -P ${VM_PORT} docker-compose.yml ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
-                scp -i ${SSH_KEY} -P ${VM_PORT} temp_env ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/.env
-                scp -i ${SSH_KEY} -P ${VM_PORT} backend.tar ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
-                scp -i ${SSH_KEY} -P ${VM_PORT} frontend.tar ${VM_USER}@${VM_HOST}:${DEPLOY_DIR}/
-                del temp_env
-                """
-
-                // Exécuter le script deploy.sh sur la VM
-                bat """
-                ssh -i ${SSH_KEY} -p ${VM_PORT} ${VM_USER}@${VM_HOST} "${DEPLOY_DIR}/deploy.sh"
-                """
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sshagent(['VM_SSH_KEY']) {
+                        bat """
+                            ssh -p %VM_PORT% %VM_USER%@%VM_HOST% "
+                            cd %DEPLOY_DIR% &&
+                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin &&
+                            docker-compose pull &&
+                            docker-compose up -d
+                            "
+                        """
+                    }
+                }
             }
         }
     }
@@ -89,7 +98,7 @@ pipeline {
             echo '❌ Build failed!'
         }
         success {
-            echo '✅ Build succeeded!'
+            echo '✅ Build, push, and deployment succeeded!'
         }
     }
 }
