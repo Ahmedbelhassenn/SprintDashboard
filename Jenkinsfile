@@ -24,13 +24,12 @@ pipeline {
     }
 
     stages {
-        // ---- 1. Checkout ----
+
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Ahmedbelhassenn/SprintDashboard.git'
             }
         }
-
         // ---- 2. Frontend ----
         stage('Frontend Lint') {
             steps {
@@ -116,6 +115,8 @@ pipeline {
                 }
             }
         }
+
+        
     }
 
     post {

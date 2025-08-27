@@ -46,11 +46,7 @@ public class UpdateServiceImpl implements UpdateService {
     public  void updateKpis(){
         semesterVelocityServices.calculateSemesterVelocity();
         trimesterVelocityServices.calculateTrimesterVelocity();
-        velocityAvgServices.calculateVelocityAvg();
         yearVelocityServices.calculateYearVelocity();
-        scrumMemberKpiServices.calculateMemberStoryPoints();
-        scrumMemberKpiServices.calculateMemberTasksToDo();
-        scrumMemberKpiServices.calculateMemberTasksCompleted();
         sprintFailureRateServices.calculateSprintFailureRate();
         totalBugsServices.updateTotalBugs();
         totalSprintsServices.updateTotalSprint();
