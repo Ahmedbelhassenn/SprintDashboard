@@ -1,31 +1,48 @@
 pipeline {
     agent any
+
     environment {
-      JIRA_BASE_URL = credentials('JIRA_BASE_URL')
-      FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
-      FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
-      IMAGE_NAME = credentials('IMAGE_NAME')
+        // Docker Hub
+        REGISTRY = "docker.io/ahmedbelhassenn"
+        IMAGE_BACKEND = "sprintdash-backend"
+        IMAGE_FRONTEND = "sprintdash-frontend"
+        IMAGE_TAG = "latest"
+
+        // VM
+        DEPLOY_DIR = "~/deploy"
+        VM_USER = 'ahmed_bh'
+        VM_HOST = '127.0.0.1'
+        VM_PORT = '2222'
+
+        // Jira / Postgres credentials
+        JIRA_BASE_URL = credentials('JIRA_BASE_URL')
+        FEIGN_CLIENT_USERNAME = credentials('FEIGN_CLIENT_USERNAME')
+        FEIGN_CLIENT_API_TOKEN = credentials('FEIGN_CLIENT_API_TOKEN')
+        POSTGRES_DB = credentials('POSTGRES_DB')
+        POSTGRES_USER = credentials('POSTGRES_USER')
+        POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
     }
+
     stages {
-        stage('Checkout code') {
+        // ---- 1. Checkout ----
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Ahmedbelhassenn/SprintDashboard.git'
             }
         }
 
+        // ---- 2. Frontend ----
         stage('Frontend Lint') {
             steps {
-                echo '🔍 Linting Angular frontend...'
                 dir('SprintDash_Frontend/SprintDash') {
                     bat 'npm install'
                     bat 'npm run lint'
                 }
             }
         }
-        
+
         stage('Frontend Build') {
             steps {
-                echo '⚙️ Building Angular frontend...'
                 dir('SprintDash_Frontend/SprintDash') {
                     bat 'ng build --configuration=production'
                 }
@@ -35,42 +52,14 @@ pipeline {
         stage('Frontend Test') {
             steps {
                 dir('SprintDash_Frontend/SprintDash') {
-                    bat 'npm run test -- --watch=false --browsers=ChromeHeadless'
+                    bat 'npm test -- --watch=false --browsers=ChromeHeadless'
                 }
             }
         }
 
-        stage('Frontend Docker Build') {
+        // ---- 3. Backend ----
+        stage('Backend Build') {
             steps {
-                echo '🐳 Building Docker image for Angular frontend...'
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat "docker build -t sprintdash-frontend:latest ."
-                }
-            }
-        }
-
-        stage('Frontend Docker Compose Up') {
-            steps {
-                echo '🚀 Running frontend container...'
-                dir('SprintDash_Frontend/SprintDash') {
-                    bat 'docker-compose down'
-                    bat 'docker-compose up -d'
-                }
-            }
-        }
-
-        stage('Backend Lint') {
-            steps {
-                echo 'Running Checkstyle...'
-                dir('SprintDash_Backend') {
-                    bat 'mvnw.cmd checkstyle:check'
-                }
-            }
-        }
-
-        stage('Backend Build avec Maven') {
-            steps {
-                echo 'Building the application...'
                 dir('SprintDash_Backend') {
                     bat 'mvnw.cmd clean package -DskipTests'
                 }
@@ -79,28 +68,51 @@ pipeline {
 
         stage('Backend Test') {
             steps {
-                echo '🧪 Running unit tests...'
                 dir('SprintDash_Backend') {
                     bat 'mvn test'
                 }
             }
         }
 
-        stage('Backend Docker Build') {
+        // ---- 4. Docker ----
+        stage('Docker Build Images') {
             steps {
-                echo '🐳 Building Docker image...'
-                dir('SprintDash_Backend') {
-                    bat "docker build -t %IMAGE_NAME% ."
+                bat """
+                    docker build -t %IMAGE_BACKEND%:latest ./SprintDash_Backend
+                    docker build -t %IMAGE_FRONTEND%:latest ./SprintDash_Frontend/SprintDash
+                """
+            }
+        }
+
+        stage('Docker Push Images') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', 
+                                                 usernameVariable: 'DOCKER_USER', 
+                                                 passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker tag %IMAGE_BACKEND%:latest %REGISTRY%/%IMAGE_BACKEND%:%IMAGE_TAG%
+                        docker tag %IMAGE_FRONTEND%:latest %REGISTRY%/%IMAGE_FRONTEND%:%IMAGE_TAG%
+                        docker push %REGISTRY%/%IMAGE_BACKEND%:%IMAGE_TAG%
+                        docker push %REGISTRY%/%IMAGE_FRONTEND%:%IMAGE_TAG%
+                    """
                 }
             }
         }
 
-        stage('Backend Docker Compose Up') {
+        // ---- 5. Deployment ----
+        stage('Deploy on VM') {
             steps {
-                echo '🚀 Running Docker Compose...'
-                dir('SprintDash_Backend') {
-                    bat 'docker-compose down'
-                    bat 'docker-compose up -d'
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', 
+                                                 usernameVariable: 'DOCKER_USER', 
+                                                 passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        REM -- Copier docker-compose.yml sur la VM --
+                        scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P %VM_PORT% docker-compose.yml %VM_USER%@%VM_HOST%:%DEPLOY_DIR%/
+
+                        REM -- SSH vers la VM et lancement des containers --
+                        ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p %VM_PORT% %VM_USER%@%VM_HOST% "cd %DEPLOY_DIR% && echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin && docker-compose pull && docker-compose up -d"
+                    """
                 }
             }
         }
@@ -114,7 +126,7 @@ pipeline {
             echo '❌ Build failed!'
         }
         success {
-            echo '✅ Build succeeded!'
+            echo '✅ Build, push, and deployment succeeded!'
         }
     }
 }
