@@ -32,28 +32,24 @@ pipeline {
 
         stage('Deploy on VM') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sshagent(['vm-ubuntu-ssh']) {
-                        bat """
-                            REM -- Test variables --
-                            echo VM_USER=%VM_USER%
-                            echo VM_HOST=%VM_HOST%
-                            echo DEPLOY_DIR=%DEPLOY_DIR%
+                withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', 
+                                                 usernameVariable: 'DOCKER_USER', 
+                                                 passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        REM -- Copier docker-compose.yml sur la VM --
+                        scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P %VM_PORT% docker-compose.yml %VM_USER%@%VM_HOST%:%DEPLOY_DIR%/
         
-                            REM -- SSH vers la VM et commandes Docker --
-                            ssh -p %VM_PORT% %VM_USER%@%VM_HOST% ^
-                            "cd %DEPLOY_DIR% && ^
-                            echo ok && ^
-                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin && ^
-                            docker-compose pull && ^
-                            docker-compose up -d"
-                        """
-                    }
+                        REM -- Test variables --
+                        echo VM_USER=%VM_USER%
+                        echo VM_HOST=%VM_HOST%
+                        echo DEPLOY_DIR=%DEPLOY_DIR%
+        
+                        REM -- SSH vers la VM et commandes Docker --
+                        ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p %VM_PORT% %VM_USER%@%VM_HOST% "cd %DEPLOY_DIR% && echo ok && echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin && docker-compose pull && docker-compose up -d"
+                    """
                 }
             }
         }
-
-
         
 
         stage('Frontend Lint & Build') {
