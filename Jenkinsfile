@@ -37,9 +37,7 @@ pipeline {
                         bat """
                             ssh -p %VM_PORT% %VM_USER%@%VM_HOST% "
                             cd %DEPLOY_DIR% &&
-                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin &&
-                            docker-compose pull &&
-                            docker-compose up -d
+                            echo "ok"
                             "
                         """
                     }
