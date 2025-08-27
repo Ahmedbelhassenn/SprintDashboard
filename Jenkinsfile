@@ -36,35 +36,21 @@ pipeline {
                                                  usernameVariable: 'DOCKER_USER', 
                                                  passwordVariable: 'DOCKER_PASS')]) {
                     bat """
-                        REM -- Copie docker-compose.yml sur la VM --
-                        scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P %VM_PORT% docker-compose.yml %VM_USER%@%VM_HOST%:~/deploy/
+                        REM -- Copier docker-compose.yml sur la VM --
+                        scp -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -P %VM_PORT% docker-compose.yml %VM_USER%@%VM_HOST%:%DEPLOY_DIR%/
         
-                        REM -- SSH vers la VM et nettoyage + déploiement --
-                        ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p %VM_PORT% %VM_USER%@%VM_HOST% "
-                            cd ~/deploy &&
-                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin &&
+                        REM -- Test variables --
+                        echo VM_USER=%VM_USER%
+                        echo VM_HOST=%VM_HOST%
+                        echo DEPLOY_DIR=%DEPLOY_DIR%
         
-                            REM -- Stop et suppression des conteneurs existants --
-                            docker rm -f \$(docker ps -a -q --filter 'name=deploy_') 2>/dev/null || true &&
-        
-                            REM -- Suppression des images backend/frontend --
-                            docker rmi -f sprintdash-backend:latest ahmedbelhassenn/sprintdash-backend:latest 2>/dev/null || true &&
-                            docker rmi -f sprintdash-frontend:latest ahmedbelhassenn/sprintdash-frontend:latest 2>/dev/null || true &&
-        
-                            REM -- Nettoyage des volumes inutilisés --
-                            docker volume prune -f &&
-        
-                            REM -- Pull images depuis Docker Hub --
-                            docker pull ahmedbelhassenn/sprintdash-backend:latest &&
-                            docker pull ahmedbelhassenn/sprintdash-frontend:latest &&
-        
-                            REM -- Lancement de Docker Compose avec recréation forcée --
-                            docker-compose up -d --force-recreate
-                        "
+                        REM -- SSH vers la VM et commandes Docker --
+                        ssh -i C:\\Users\\USER\\.ssh\\jenkins_id_rsa -p %VM_PORT% %VM_USER%@%VM_HOST% "cd %DEPLOY_DIR% && echo ok && echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin && docker-compose pull && docker-compose up -d"
                     """
                 }
             }
         }
+
 
         
 
