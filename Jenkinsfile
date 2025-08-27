@@ -75,7 +75,7 @@ pipeline {
         stage('Deploy on VM') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DOCKERHUB_CREDS', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sshagent(['VM_SSH_KEY']) {
+                    sshagent(['vm-ubuntu-ssh']) {
                         bat """
                             ssh -p %VM_PORT% %VM_USER%@%VM_HOST% "
                             cd %DEPLOY_DIR% &&
