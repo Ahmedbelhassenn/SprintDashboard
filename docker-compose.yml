@@ -1,6 +1,6 @@
 services:
   backend:
-    image: sprintdash-backend:latest
+    image: ahmedbelhassenn/sprintdash-backend:latest
     ports:
       - "8085:8080"
     env_file:
@@ -9,7 +9,7 @@ services:
       - db
 
   frontend:
-    image: sprintdash-frontend:latest
+    image: ahmedbelhassenn/sprintdash-frontend:latest
     ports:
       - "4200:80"
     env_file:
